@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Baby, Heart, ArrowRight, Sparkles } from "lucide-react";
+import { Calendar, Baby, Heart, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertPregnancySchema } from "@shared/schema";
@@ -17,9 +17,22 @@ import motherBabyImage from "@assets/image_1752428001266.png";
 import heartImage from "@assets/image_1752428013534.png";
 
 const setupSchema = z.object({
-  lastMenstrualPeriod: z.string().min(1, "Data da última menstruação é obrigatória"),
+  dateType: z.enum(["lmp", "due"], { required_error: "Escolha uma opção de data" }),
+  lastMenstrualPeriod: z.string().optional(),
+  dueDate: z.string().optional(),
   prePregnancyWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg"),
   currentWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg"),
+}).refine((data) => {
+  if (data.dateType === "lmp" && !data.lastMenstrualPeriod) {
+    return false;
+  }
+  if (data.dateType === "due" && !data.dueDate) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Preencha a data selecionada",
+  path: ["dateType"],
 });
 
 type SetupFormData = z.infer<typeof setupSchema>;
@@ -33,7 +46,9 @@ export default function Setup() {
   const form = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
+      dateType: undefined,
       lastMenstrualPeriod: "",
+      dueDate: "",
       prePregnancyWeight: undefined,
       currentWeight: undefined,
     },
@@ -41,12 +56,24 @@ export default function Setup() {
 
   const createPregnancyMutation = useMutation({
     mutationFn: async (data: SetupFormData) => {
-      const dueDate = new Date(data.lastMenstrualPeriod);
-      dueDate.setDate(dueDate.getDate() + 280); // 40 weeks
+      let lastMenstrualPeriod: string;
+      let dueDate: string;
+      
+      if (data.dateType === "lmp") {
+        lastMenstrualPeriod = data.lastMenstrualPeriod!;
+        const dueDateObj = new Date(data.lastMenstrualPeriod!);
+        dueDateObj.setDate(dueDateObj.getDate() + 280); // 40 weeks
+        dueDate = dueDateObj.toISOString().split('T')[0];
+      } else {
+        dueDate = data.dueDate!;
+        const lmpObj = new Date(data.dueDate!);
+        lmpObj.setDate(lmpObj.getDate() - 280); // 40 weeks back
+        lastMenstrualPeriod = lmpObj.toISOString().split('T')[0];
+      }
       
       return await apiRequest("POST", "/api/pregnancies", {
-        lastMenstrualPeriod: data.lastMenstrualPeriod,
-        dueDate: dueDate.toISOString().split('T')[0],
+        lastMenstrualPeriod,
+        dueDate,
         prePregnancyWeight: data.prePregnancyWeight,
         currentWeight: data.currentWeight,
         isActive: true,
@@ -75,10 +102,21 @@ export default function Setup() {
   };
 
   const calculateCurrentWeek = () => {
+    const dateType = form.watch("dateType");
     const lmp = form.watch("lastMenstrualPeriod");
-    if (!lmp) return 0;
+    const dueDate = form.watch("dueDate");
     
-    const lmpDate = new Date(lmp);
+    let lmpDate: Date;
+    
+    if (dateType === "lmp" && lmp) {
+      lmpDate = new Date(lmp);
+    } else if (dateType === "due" && dueDate) {
+      lmpDate = new Date(dueDate);
+      lmpDate.setDate(lmpDate.getDate() - 280); // 40 weeks back
+    } else {
+      return 0;
+    }
+    
     const today = new Date();
     const diffInDays = Math.floor((today.getTime() - lmpDate.getTime()) / (1000 * 60 * 60 * 24));
     return Math.floor(diffInDays / 7);
@@ -149,48 +187,169 @@ export default function Setup() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="px-8 pb-8 space-y-6 relative">
           {currentStep === 1 && (
             <div className="space-y-6 fade-in">
+              {/* Date Type Selection */}
               <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
                       <Calendar className="text-white" size={20} />
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800">Data da Última Menstruação</h2>
+                    <h2 className="text-xl font-bold text-gray-800">Como prefere informar sua data?</h2>
                   </div>
                   
                   <FormField
                     control={form.control}
-                    name="lastMenstrualPeriod"
+                    name="dateType"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Data da última menstruação (DUM)
-                        </FormLabel>
+                      <FormItem className="space-y-3">
                         <FormControl>
-                          <Input
-                            type="date"
-                            className="rounded-xl"
-                            max={new Date().toISOString().split('T')[0]}
-                            {...field}
-                          />
+                          <div className="grid grid-cols-1 gap-3">
+                            <button
+                              type="button"
+                              onClick={() => field.onChange("lmp")}
+                              className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                                field.value === "lmp"
+                                  ? 'border-pink-500 bg-pink-50'
+                                  : 'border-gray-200 hover:border-pink-300'
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                  field.value === "lmp"
+                                    ? 'border-pink-500 bg-pink-500'
+                                    : 'border-gray-300'
+                                }`}>
+                                  {field.value === "lmp" && <CheckCircle2 className="text-white" size={16} />}
+                                </div>
+                                <div className="text-left">
+                                  <p className="font-medium text-gray-800">Data da última menstruação</p>
+                                  <p className="text-sm text-gray-600">Informe quando foi sua última menstruação</p>
+                                </div>
+                              </div>
+                            </button>
+                            
+                            <button
+                              type="button"
+                              onClick={() => field.onChange("due")}
+                              className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                                field.value === "due"
+                                  ? 'border-purple-500 bg-purple-50'
+                                  : 'border-gray-200 hover:border-purple-300'
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                  field.value === "due"
+                                    ? 'border-purple-500 bg-purple-500'
+                                    : 'border-gray-300'
+                                }`}>
+                                  {field.value === "due" && <CheckCircle2 className="text-white" size={16} />}
+                                </div>
+                                <div className="text-left">
+                                  <p className="font-medium text-gray-800">Data prevista do nascimento</p>
+                                  <p className="text-sm text-gray-600">Informe a data prevista do parto</p>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  {currentWeek > 0 && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
-                      <div className="flex items-center space-x-2">
-                        <Sparkles className="text-green-600" size={16} />
-                        <p className="text-sm text-green-700 font-medium">
-                          Você está na semana {currentWeek} de gestação
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
+
+              {/* Date Input Fields */}
+              {form.watch("dateType") === "lmp" && (
+                <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                        <Calendar className="text-white" size={20} />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-800">Data da Última Menstruação</h2>
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="lastMenstrualPeriod"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Data da última menstruação (DUM)
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="date"
+                              className="rounded-xl"
+                              max={new Date().toISOString().split('T')[0]}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {currentWeek > 0 && (
+                      <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                        <div className="flex items-center space-x-2">
+                          <Sparkles className="text-green-600" size={16} />
+                          <p className="text-sm text-green-700 font-medium">
+                            Você está na semana {currentWeek} de gestação
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {form.watch("dateType") === "due" && (
+                <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                        <Baby className="text-white" size={20} />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-800">Data Prevista do Nascimento</h2>
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="dueDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Data prevista do parto (DPP)
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="date"
+                              className="rounded-xl"
+                              min={new Date().toISOString().split('T')[0]}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {currentWeek > 0 && (
+                      <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                        <div className="flex items-center space-x-2">
+                          <Sparkles className="text-green-600" size={16} />
+                          <p className="text-sm text-green-700 font-medium">
+                            Você está na semana {currentWeek} de gestação
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
@@ -254,7 +413,13 @@ export default function Setup() {
               <Button
                 type="button"
                 onClick={() => setCurrentStep(2)}
-                disabled={!form.watch("lastMenstrualPeriod") || !form.watch("prePregnancyWeight") || !form.watch("currentWeight")}
+                disabled={
+                  !form.watch("dateType") ||
+                  (form.watch("dateType") === "lmp" && !form.watch("lastMenstrualPeriod")) ||
+                  (form.watch("dateType") === "due" && !form.watch("dueDate")) ||
+                  !form.watch("prePregnancyWeight") || 
+                  !form.watch("currentWeight")
+                }
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 Continuar
@@ -275,12 +440,23 @@ export default function Setup() {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Data da última menstruação:</span>
-                      <span className="font-bold text-gray-800">
-                        {form.watch("lastMenstrualPeriod") && new Date(form.watch("lastMenstrualPeriod")).toLocaleDateString("pt-BR")}
-                      </span>
-                    </div>
+                    {form.watch("dateType") === "lmp" && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Data da última menstruação:</span>
+                        <span className="font-bold text-gray-800">
+                          {form.watch("lastMenstrualPeriod") && new Date(form.watch("lastMenstrualPeriod")).toLocaleDateString("pt-BR")}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {form.watch("dateType") === "due" && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Data prevista do parto:</span>
+                        <span className="font-bold text-purple-600">
+                          {form.watch("dueDate") && new Date(form.watch("dueDate")).toLocaleDateString("pt-BR")}
+                        </span>
+                      </div>
+                    )}
                     
                     <div className="flex justify-between items-center py-2">
                       <span className="text-gray-600 font-medium">Semana atual:</span>
@@ -304,16 +480,31 @@ export default function Setup() {
                       </span>
                     </div>
                     
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Data prevista do parto:</span>
-                      <span className="font-bold text-purple-600">
-                        {form.watch("lastMenstrualPeriod") && (() => {
-                          const dueDate = new Date(form.watch("lastMenstrualPeriod"));
-                          dueDate.setDate(dueDate.getDate() + 280);
-                          return dueDate.toLocaleDateString("pt-BR");
-                        })()}
-                      </span>
-                    </div>
+                    {form.watch("dateType") === "lmp" && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Data prevista do parto:</span>
+                        <span className="font-bold text-purple-600">
+                          {form.watch("lastMenstrualPeriod") && (() => {
+                            const dueDate = new Date(form.watch("lastMenstrualPeriod"));
+                            dueDate.setDate(dueDate.getDate() + 280);
+                            return dueDate.toLocaleDateString("pt-BR");
+                          })()}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {form.watch("dateType") === "due" && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Data da última menstruação:</span>
+                        <span className="font-bold text-gray-800">
+                          {form.watch("dueDate") && (() => {
+                            const lmpDate = new Date(form.watch("dueDate"));
+                            lmpDate.setDate(lmpDate.getDate() - 280);
+                            return lmpDate.toLocaleDateString("pt-BR");
+                          })()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
