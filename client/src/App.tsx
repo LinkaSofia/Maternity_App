@@ -20,12 +20,19 @@ function Router() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gradient-bg">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <div className="w-8 h-8 bg-white rounded-full"></div>
+      <div className="max-w-sm mx-auto min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse"></div>
+          <div className="absolute top-40 right-16 w-16 h-16 bg-purple-200 rounded-full opacity-30 animate-pulse delay-1000"></div>
+          <div className="absolute bottom-32 left-20 w-12 h-12 bg-indigo-200 rounded-full opacity-25 animate-pulse delay-2000"></div>
+        </div>
+        <div className="relative flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse shadow-2xl">
+              <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full"></div>
+            </div>
+            <p className="text-gray-700 font-medium">Carregando...</p>
           </div>
-          <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
     );
@@ -39,12 +46,19 @@ function Router() {
         <>
           {pregnancyLoading ? (
             <Route path="/" component={() => (
-              <div className="min-h-screen flex items-center justify-center gradient-bg">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                    <div className="w-8 h-8 bg-white rounded-full"></div>
+              <div className="max-w-sm mx-auto min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse"></div>
+                  <div className="absolute top-40 right-16 w-16 h-16 bg-purple-200 rounded-full opacity-30 animate-pulse delay-1000"></div>
+                  <div className="absolute bottom-32 left-20 w-12 h-12 bg-indigo-200 rounded-full opacity-25 animate-pulse delay-2000"></div>
+                </div>
+                <div className="relative flex items-center justify-center min-h-screen">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse shadow-2xl">
+                      <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full"></div>
+                    </div>
+                    <p className="text-gray-700 font-medium">Carregando...</p>
                   </div>
-                  <p className="text-gray-600">Carregando...</p>
                 </div>
               </div>
             )} />
