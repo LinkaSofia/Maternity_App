@@ -5,6 +5,7 @@ import NavigationTabs from "@/components/navigation-tabs";
 import PregnancyProgress from "@/components/pregnancy-progress";
 import BabySizeComparison from "@/components/baby-size-comparison";
 import FloatingActionButton from "@/components/floating-action-button";
+import Header from "@/components/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Weight, Clock, TrendingUp } from "lucide-react";
@@ -42,26 +43,11 @@ export default function Home() {
     <div className="max-w-sm mx-auto bg-white min-h-screen shadow-2xl">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h1 className="text-xl font-bold">
-              Olá, {user?.firstName || "Mamãe"}!
-            </h1>
-            <p className="text-sm opacity-90">
-              Semana {currentWeek} de gestação
-            </p>
-          </div>
-          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-            {user?.profileImageUrl ? (
-              <img
-                src={user.profileImageUrl}
-                alt="Profile"
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-8 h-8 bg-white rounded-full"></div>
-            )}
-          </div>
+        <div className="mb-4">
+          <Header 
+            title={`Olá, ${user?.firstName || "Mamãe"}!`}
+            subtitle={`Semana ${currentWeek} de gestação`}
+          />
         </div>
 
         <PregnancyProgress 

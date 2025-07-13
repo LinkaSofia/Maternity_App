@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import BabySizeComparison from "@/components/baby-size-comparison";
+import UserMenu from "@/components/user-menu";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function Baby() {

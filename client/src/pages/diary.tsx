@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Search, Image } from "lucide-react";
 import DiaryEntry from "@/components/diary-entry";
+import UserMenu from "@/components/user-menu";
 
 export default function Diary() {
   const [newEntry, setNewEntry] = useState({ title: "", content: "" });

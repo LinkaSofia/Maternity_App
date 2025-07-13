@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Utensils, Dumbbell, Bed, Pill, Droplets, Stethoscope, Clock, BookOpen } from "lucide-react";
+import UserMenu from "@/components/user-menu";
 
 export default function Tips() {
   const weeklyTips = [
