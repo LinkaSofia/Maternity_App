@@ -13,15 +13,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertPregnancySchema } from "@shared/schema";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import motherBabyImage from "@assets/image_1752428001266.png";
-import heartImage from "@assets/image_1752428013534.png";
+
 
 const setupSchema = z.object({
   dateType: z.enum(["lmp", "due"], { required_error: "Escolha uma opção de data" }),
   lastMenstrualPeriod: z.string().optional(),
   dueDate: z.string().optional(),
-  prePregnancyWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg"),
-  currentWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg"),
+  prePregnancyWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg").optional(),
+  currentWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg").optional(),
 }).refine((data) => {
   if (data.dateType === "lmp" && !data.lastMenstrualPeriod) {
     return false;
@@ -138,11 +137,7 @@ export default function Setup() {
       <div className="relative p-8 text-center">
         <div className="mb-6">
           <div className="w-24 h-24 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-2xl mb-4">
-            <img 
-              src={motherBabyImage} 
-              alt="Mãe e bebê" 
-              className="w-16 h-16 object-contain"
-            />
+            <Baby className="text-pink-600" size={32} />
             <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
           </div>
           
@@ -367,7 +362,7 @@ export default function Setup() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Peso antes da gravidez (kg)
+                            Peso antes da gravidez (kg) - Opcional
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -390,7 +385,7 @@ export default function Setup() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Peso atual (kg)
+                            Peso atual (kg) - Opcional
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -416,9 +411,7 @@ export default function Setup() {
                 disabled={
                   !form.watch("dateType") ||
                   (form.watch("dateType") === "lmp" && !form.watch("lastMenstrualPeriod")) ||
-                  (form.watch("dateType") === "due" && !form.watch("dueDate")) ||
-                  !form.watch("prePregnancyWeight") || 
-                  !form.watch("currentWeight")
+                  (form.watch("dateType") === "due" && !form.watch("dueDate"))
                 }
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
@@ -463,22 +456,28 @@ export default function Setup() {
                       <span className="font-bold text-pink-600">{currentWeek} semanas</span>
                     </div>
                     
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Peso antes da gravidez:</span>
-                      <span className="font-bold text-gray-800">{form.watch("prePregnancyWeight")}kg</span>
-                    </div>
+                    {form.watch("prePregnancyWeight") && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Peso antes da gravidez:</span>
+                        <span className="font-bold text-gray-800">{form.watch("prePregnancyWeight")}kg</span>
+                      </div>
+                    )}
                     
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Peso atual:</span>
-                      <span className="font-bold text-gray-800">{form.watch("currentWeight")}kg</span>
-                    </div>
+                    {form.watch("currentWeight") && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Peso atual:</span>
+                        <span className="font-bold text-gray-800">{form.watch("currentWeight")}kg</span>
+                      </div>
+                    )}
                     
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Ganho de peso:</span>
-                      <span className="font-bold text-green-600">
-                        +{((form.watch("currentWeight") || 0) - (form.watch("prePregnancyWeight") || 0)).toFixed(1)}kg
-                      </span>
-                    </div>
+                    {form.watch("prePregnancyWeight") && form.watch("currentWeight") && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-600 font-medium">Ganho de peso:</span>
+                        <span className="font-bold text-green-600">
+                          +{((form.watch("currentWeight") || 0) - (form.watch("prePregnancyWeight") || 0)).toFixed(1)}kg
+                        </span>
+                      </div>
+                    )}
                     
                     {form.watch("dateType") === "lmp" && (
                       <div className="flex justify-between items-center py-2">

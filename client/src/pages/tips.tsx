@@ -50,17 +50,14 @@ export default function Tips() {
     {
       title: "Alimentação no 2º trimestre",
       duration: "Leitura de 5 min",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
     {
       title: "Exercícios seguros",
       duration: "Leitura de 7 min",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
     {
       title: "Preparação para o parto",
       duration: "Leitura de 10 min",
-      image: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
     },
   ];
 
@@ -119,11 +116,9 @@ export default function Tips() {
           <div className="space-y-3">
             {educationalContent.map((content, index) => (
               <div key={index} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 smooth-transition cursor-pointer">
-                <img
-                  src={content.image}
-                  alt={content.title}
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg flex items-center justify-center">
+                  <BookOpen className="text-pink-600" size={20} />
+                </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-800">{content.title}</h3>
                   <div className="flex items-center space-x-2 text-xs text-gray-500">

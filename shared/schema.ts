@@ -33,6 +33,8 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  phone: varchar("phone"),
+  birthDate: varchar("birth_date"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -157,6 +159,9 @@ export const insertPregnancySchema = createInsertSchema(pregnancies).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  currentWeight: z.number().optional(),
+  prePregnancyWeight: z.number().optional(),
 });
 export type InsertPregnancy = z.infer<typeof insertPregnancySchema>;
 export type Pregnancy = typeof pregnancies.$inferSelect;

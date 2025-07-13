@@ -1,6 +1,8 @@
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Heart, Edit, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, Heart, Edit, Trash2, Smile, Frown, Meh } from "lucide-react";
 
 interface DiaryEntryProps {
   entry: {
@@ -11,8 +13,8 @@ interface DiaryEntryProps {
     tags?: string[];
     createdAt: string;
   };
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export default function DiaryEntry({ entry, onEdit, onDelete }: DiaryEntryProps) {
@@ -35,23 +37,25 @@ export default function DiaryEntry({ entry, onEdit, onDelete }: DiaryEntryProps)
     }
   };
 
-  const getMoodColor = (mood?: string) => {
+  const getMoodIcon = (mood?: string) => {
     switch (mood) {
       case "happy":
-        return "bg-sage text-sage-foreground";
+        return { icon: Smile, color: "text-yellow-500 bg-yellow-50" };
       case "sad":
-        return "bg-accent text-accent-foreground";
-      case "anxious":
-        return "bg-yellow-500 text-white";
+        return { icon: Frown, color: "text-blue-500 bg-blue-50" };
       case "excited":
-        return "bg-primary text-primary-foreground";
+        return { icon: Heart, color: "text-pink-500 bg-pink-50" };
+      case "neutral":
+        return { icon: Meh, color: "text-gray-500 bg-gray-50" };
       default:
-        return "bg-gray-500 text-white";
+        return null;
     }
   };
 
+  const moodData = getMoodIcon(entry.mood);
+
   return (
-    <Card className="bg-white rounded-2xl card-shadow hover:shadow-lg transition-shadow">
+    <Card className="bg-white/80 backdrop-blur-sm rounded-2xl card-shadow border-0 hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-3">
           <div>
@@ -65,20 +69,24 @@ export default function DiaryEntry({ entry, onEdit, onDelete }: DiaryEntryProps)
           </div>
           <div className="flex space-x-2">
             {onEdit && (
-              <button
-                onClick={() => onEdit(entry.id)}
+              <Button
+                onClick={onEdit}
+                variant="ghost"
+                size="sm"
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <Edit size={14} className="text-gray-500" />
-              </button>
+              </Button>
             )}
             {onDelete && (
-              <button
-                onClick={() => onDelete(entry.id)}
+              <Button
+                onClick={onDelete}
+                variant="ghost"
+                size="sm"
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <Trash2 size={14} className="text-gray-500" />
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -86,18 +94,29 @@ export default function DiaryEntry({ entry, onEdit, onDelete }: DiaryEntryProps)
         <p className="text-gray-700 text-sm mb-3 leading-relaxed">{entry.content}</p>
 
         <div className="flex items-center justify-between">
-          <div className="flex space-x-2">
-            {entry.mood && (
-              <Badge className={getMoodColor(entry.mood)}>
-                <Heart size={12} className="mr-1" />
-                {entry.mood}
-              </Badge>
+          <div className="flex items-center space-x-3">
+            {moodData && (
+              <div className="flex items-center space-x-2">
+                <div className={`p-2 rounded-full ${moodData.color}`}>
+                  {React.createElement(moodData.icon, { size: 12 })}
+                </div>
+                <span className="text-xs text-gray-600">
+                  {entry.mood === "happy" ? "Feliz" : 
+                   entry.mood === "sad" ? "Triste" :
+                   entry.mood === "excited" ? "Animada" :
+                   entry.mood === "neutral" ? "Neutro" : entry.mood}
+                </span>
+              </div>
             )}
-            {entry.tags?.map((tag, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
+            {entry.tags && entry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {entry.tags.map((tag, index) => (
+                  <Badge key={index} variant="secondary" className="text-xs bg-gradient-to-r from-pink-100 to-purple-100 text-gray-700">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
