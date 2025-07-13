@@ -7,6 +7,7 @@ BabyJourney is a comprehensive pregnancy tracking application that helps expecti
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Design preference: More colorful and vibrant landing page with mother-baby imagery, showing more life and warmth.
 
 ## System Architecture
 
