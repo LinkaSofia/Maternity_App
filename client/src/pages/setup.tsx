@@ -7,12 +7,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Baby, Heart, ArrowRight } from "lucide-react";
+import { Calendar, Baby, Heart, ArrowRight, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertPregnancySchema } from "@shared/schema";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import motherBabyImage from "@assets/image_1752428001266.png";
+import heartImage from "@assets/image_1752428013534.png";
 
 const setupSchema = z.object({
   lastMenstrualPeriod: z.string().min(1, "Data da última menstruação é obrigatória"),
@@ -85,53 +87,73 @@ export default function Setup() {
   const currentWeek = calculateCurrentWeek();
 
   return (
-    <div className="max-w-sm mx-auto bg-white min-h-screen shadow-2xl">
+    <div className="max-w-sm mx-auto min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-16 w-16 h-16 bg-purple-200 rounded-full opacity-30 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-20 w-12 h-12 bg-indigo-200 rounded-full opacity-25 animate-pulse delay-2000"></div>
+        <div className="absolute bottom-20 right-10 w-24 h-24 bg-pink-300 rounded-full opacity-15 animate-pulse delay-500"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white text-center">
-        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Baby className="text-white" size={32} />
+      <div className="relative p-8 text-center">
+        <div className="mb-6">
+          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-2xl mb-4">
+            <img 
+              src={motherBabyImage} 
+              alt="Mãe e bebê" 
+              className="w-16 h-16 object-contain"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
+          </div>
+          
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+            Olá, {user?.firstName || "Mamãe"}!
+          </h1>
+          <p className="text-lg text-gray-700 font-medium">
+            Vamos configurar sua jornada de gravidez
+          </p>
         </div>
-        <h1 className="text-2xl font-bold mb-2">
-          Olá, {user?.firstName || "Mamãe"}!
-        </h1>
-        <p className="text-sm opacity-90">
-          Vamos configurar sua jornada de gravidez
-        </p>
       </div>
 
       {/* Progress Steps */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-2">
-          <div className={`flex items-center space-x-2 ${currentStep >= 1 ? 'text-primary' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 1 ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-              1
+      <div className="px-8 mb-6">
+        <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className={`flex items-center space-x-2 ${currentStep >= 1 ? 'text-pink-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 1 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
+                  1
+                </div>
+                <span className="text-sm font-medium">Informações</span>
+              </div>
+              <div className={`flex items-center space-x-2 ${currentStep >= 2 ? 'text-pink-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 2 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
+                  2
+                </div>
+                <span className="text-sm font-medium">Confirmação</span>
+              </div>
             </div>
-            <span className="text-sm font-medium">Informações</span>
-          </div>
-          <div className={`flex items-center space-x-2 ${currentStep >= 2 ? 'text-primary' : 'text-gray-400'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 2 ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-              2
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-gradient-to-r from-pink-400 to-pink-500 h-3 rounded-full transition-all duration-500"
+                style={{ width: `${(currentStep / 2) * 100}%` }}
+              />
             </div>
-            <span className="text-sm font-medium">Confirmação</span>
-          </div>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-primary h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / 2) * 100}%` }}
-          />
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="px-8 pb-8 space-y-6 relative">
           {currentStep === 1 && (
             <div className="space-y-6 fade-in">
-              <Card className="bg-white rounded-2xl card-shadow">
+              <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Calendar className="text-primary" size={20} />
+                    <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Calendar className="text-white" size={20} />
                     </div>
                     <h2 className="text-xl font-bold text-gray-800">Data da Última Menstruação</h2>
                   </div>
@@ -158,20 +180,23 @@ export default function Setup() {
                   />
 
                   {currentWeek > 0 && (
-                    <div className="mt-4 p-3 bg-sage/10 rounded-xl">
-                      <p className="text-sm text-sage font-medium">
-                        Você está na semana {currentWeek} de gestação
-                      </p>
+                    <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                      <div className="flex items-center space-x-2">
+                        <Sparkles className="text-green-600" size={16} />
+                        <p className="text-sm text-green-700 font-medium">
+                          Você está na semana {currentWeek} de gestação
+                        </p>
+                      </div>
                     </div>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="bg-white rounded-2xl card-shadow">
+              <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
-                      <Heart className="text-secondary" size={20} />
+                    <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Heart className="text-white" size={20} />
                     </div>
                     <h2 className="text-xl font-bold text-gray-800">Informações de Peso</h2>
                   </div>
@@ -230,7 +255,7 @@ export default function Setup() {
                 type="button"
                 onClick={() => setCurrentStep(2)}
                 disabled={!form.watch("lastMenstrualPeriod") || !form.watch("prePregnancyWeight") || !form.watch("currentWeight")}
-                className="w-full bg-primary text-white py-4 rounded-xl text-lg font-semibold hover:bg-primary/90 smooth-transition"
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 Continuar
                 <ArrowRight className="ml-2" size={20} />
@@ -240,43 +265,48 @@ export default function Setup() {
 
           {currentStep === 2 && (
             <div className="space-y-6 fade-in">
-              <Card className="bg-white rounded-2xl card-shadow">
+              <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
-                  <h2 className="text-xl font-bold text-gray-800 mb-4">Confirme suas informações</h2>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Heart className="text-white" size={20} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800">Confirme suas informações</h2>
+                  </div>
                   
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Data da última menstruação:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Data da última menstruação:</span>
+                      <span className="font-bold text-gray-800">
                         {form.watch("lastMenstrualPeriod") && new Date(form.watch("lastMenstrualPeriod")).toLocaleDateString("pt-BR")}
                       </span>
                     </div>
                     
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Semana atual:</span>
-                      <span className="font-medium text-primary">{currentWeek} semanas</span>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Semana atual:</span>
+                      <span className="font-bold text-pink-600">{currentWeek} semanas</span>
                     </div>
                     
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Peso antes da gravidez:</span>
-                      <span className="font-medium">{form.watch("prePregnancyWeight")}kg</span>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Peso antes da gravidez:</span>
+                      <span className="font-bold text-gray-800">{form.watch("prePregnancyWeight")}kg</span>
                     </div>
                     
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Peso atual:</span>
-                      <span className="font-medium">{form.watch("currentWeight")}kg</span>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Peso atual:</span>
+                      <span className="font-bold text-gray-800">{form.watch("currentWeight")}kg</span>
                     </div>
                     
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Ganho de peso:</span>
-                      <span className="font-medium text-sage">
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Ganho de peso:</span>
+                      <span className="font-bold text-green-600">
                         +{((form.watch("currentWeight") || 0) - (form.watch("prePregnancyWeight") || 0)).toFixed(1)}kg
                       </span>
                     </div>
                     
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Data prevista do parto:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 font-medium">Data prevista do parto:</span>
+                      <span className="font-bold text-purple-600">
                         {form.watch("lastMenstrualPeriod") && (() => {
                           const dueDate = new Date(form.watch("lastMenstrualPeriod"));
                           dueDate.setDate(dueDate.getDate() + 280);
@@ -289,29 +319,48 @@ export default function Setup() {
               </Card>
 
               <div className="space-y-3">
-                <Button
-                  type="submit"
-                  disabled={createPregnancyMutation.isPending}
-                  className="w-full bg-primary text-white py-4 rounded-xl text-lg font-semibold hover:bg-primary/90 smooth-transition"
-                >
-                  {createPregnancyMutation.isPending ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Salvando...</span>
+                <Card className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl shadow-2xl border-0 overflow-hidden">
+                  <CardContent className="p-6 text-center relative">
+                    <div className="absolute top-2 right-2 w-10 h-10 opacity-20">
+                      <img src={heartImage} alt="Heart" className="w-full h-full object-contain" />
                     </div>
-                  ) : (
-                    <>
-                      <Heart className="mr-2" size={20} />
-                      Começar Minha Jornada
-                    </>
-                  )}
-                </Button>
+                    
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <Heart className="text-white" size={20} />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      Pronta para começar?
+                    </h3>
+                    <p className="text-white/90 mb-4 text-sm">
+                      Suas informações estão corretas
+                    </p>
+                    
+                    <Button
+                      type="submit"
+                      disabled={createPregnancyMutation.isPending}
+                      className="w-full bg-white text-purple-600 py-4 rounded-xl text-lg font-bold hover:bg-gray-50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      {createPregnancyMutation.isPending ? (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                          <span>Salvando...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <Heart className="mr-2" size={20} />
+                          Começar Minha Jornada
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
                 
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setCurrentStep(1)}
-                  className="w-full py-4 rounded-xl"
+                  className="w-full py-4 rounded-xl bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all duration-300"
                 >
                   Voltar
                 </Button>
