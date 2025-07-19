@@ -188,17 +188,19 @@ export default function Symptoms() {
                 </div>
 
                 <div>
-                  <Label htmlFor="severity">Intensidade: {formData.severity[0]} ({getSeverityText(formData.severity[0])})</Label>
-                  <div className="px-2 py-4">
+                  <Label htmlFor="severity">
+                    Intensidade: <span className="font-bold text-lg text-red-600">{formData.severity[0]}</span> ({getSeverityText(formData.severity[0])})
+                  </Label>
+                  <div className="px-2 py-4 bg-gray-50 rounded-lg border">
                     <Slider
                       value={formData.severity}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, severity: value }))}
                       max={10}
                       min={1}
                       step={1}
-                      className="w-full"
+                      className="w-full [&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-600 [&_.range]:bg-red-200"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <div className="flex justify-between text-xs text-gray-600 mt-2 font-medium">
                       <span>1 - Muito Leve</span>
                       <span>5 - Moderado</span>
                       <span>10 - Muito Intenso</span>

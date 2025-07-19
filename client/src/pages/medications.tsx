@@ -319,10 +319,36 @@ export default function Medications() {
           </Card>
         )}
 
+        {/* Today's Summary */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Resumo de Hoje - {new Date().toLocaleDateString('pt-BR')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{activeMedications.filter((m: any) => getTodayLog(m.id).find((l: any) => !l.skipped)).length}</div>
+                <div className="text-sm text-gray-500">Tomados</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">{activeMedications.filter((m: any) => getTodayLog(m.id).find((l: any) => l.skipped)).length}</div>
+                <div className="text-sm text-gray-500">Pulados</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">{activeMedications.filter((m: any) => getTodayLog(m.id).length === 0).length}</div>
+                <div className="text-sm text-gray-500">Pendentes</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Active Medications */}
         {activeMedications.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-4">Medicamentos Ativos</h2>
+            <h2 className="text-xl font-semibold mb-4">💊 Medicamentos Ativos</h2>
             <div className="space-y-3">
               {activeMedications.map((medication: any) => {
                 const todayLogs = getTodayLog(medication.id);

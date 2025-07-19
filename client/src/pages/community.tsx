@@ -243,13 +243,14 @@ export default function Community() {
                   </Select>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 p-3 bg-purple-50 border border-purple-200 rounded-lg">
                   <Switch
                     id="anonymous"
                     checked={formData.isAnonymous}
                     onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isAnonymous: checked }))}
+                    className="data-[state=checked]:bg-purple-500"
                   />
-                  <Label htmlFor="anonymous">Publicar anonimamente</Label>
+                  <Label htmlFor="anonymous" className="text-purple-800 font-medium">🔒 Publicar anonimamente</Label>
                 </div>
 
                 <div className="flex gap-2">
@@ -315,20 +316,20 @@ export default function Community() {
                         variant="ghost"
                         size="sm"
                         onClick={() => toggleLike.mutate({ postId: post.id, isLiked: false })}
-                        className="text-gray-500 hover:text-pink-500"
+                        className="text-gray-600 hover:text-pink-500 hover:bg-pink-50 border border-gray-200 hover:border-pink-300 bg-white"
                       >
                         <Heart className="w-4 h-4 mr-1" />
-                        {post.likesCount || 0}
+                        <span className="font-medium">{post.likesCount || 0} Curtir</span>
                       </Button>
                       
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowReplies(showReplies === post.id ? null : post.id)}
-                        className="text-gray-500 hover:text-indigo-500"
+                        className="text-gray-600 hover:text-indigo-500 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 bg-white"
                       >
                         <MessageCircle className="w-4 h-4 mr-1" />
-                        {post.repliesCount || 0}
+                        <span className="font-medium">{post.repliesCount || 0} Responder</span>
                       </Button>
                     </div>
 

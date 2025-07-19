@@ -159,9 +159,19 @@ export default function BirthPlan() {
           </div>
           
           {!isEditing && birthPlan && (
-            <Button onClick={() => setIsEditing(true)} className="bg-rose-500 hover:bg-rose-600">
-              Editar Plano
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsEditing(true)} className="bg-rose-500 hover:bg-rose-600">
+                Editar Plano
+              </Button>
+              <Button 
+                onClick={() => window.print()} 
+                variant="outline"
+                className="border-rose-300 text-rose-600 hover:bg-rose-50"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Exportar PDF
+              </Button>
+            </div>
           )}
         </div>
 
@@ -214,30 +224,30 @@ export default function BirthPlan() {
                   <div>
                     <Label htmlFor="birthType">Tipo de Parto Preferido</Label>
                     <Select value={formData.birthType} onValueChange={(value) => setFormData(prev => ({ ...prev, birthType: value }))}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white border-gray-300">
                         <SelectValue placeholder="Selecione o tipo" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="natural">Parto Natural</SelectItem>
-                        <SelectItem value="humanized">Parto Humanizado</SelectItem>
-                        <SelectItem value="water_birth">Parto na Água</SelectItem>
-                        <SelectItem value="cesarean">Cesárea</SelectItem>
-                        <SelectItem value="vbac">Parto Normal após Cesárea (VBAC)</SelectItem>
+                      <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                        <SelectItem value="natural" className="hover:bg-green-50">🌱 Parto Natural</SelectItem>
+                        <SelectItem value="humanized" className="hover:bg-pink-50">💝 Parto Humanizado</SelectItem>
+                        <SelectItem value="water_birth" className="hover:bg-blue-50">🌊 Parto na Água</SelectItem>
+                        <SelectItem value="cesarean" className="hover:bg-purple-50">🏥 Cesárea</SelectItem>
+                        <SelectItem value="vbac" className="hover:bg-orange-50">👶 Parto Normal após Cesárea (VBAC)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Label htmlFor="painManagement">Controle da Dor</Label>
                     <Select value={formData.painManagement} onValueChange={(value) => setFormData(prev => ({ ...prev, painManagement: value }))}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white border-gray-300">
                         <SelectValue placeholder="Selecione a opção" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="natural">Apenas métodos naturais</SelectItem>
-                        <SelectItem value="epidural">Anestesia peridural</SelectItem>
-                        <SelectItem value="nitrous_oxide">Óxido nitroso</SelectItem>
-                        <SelectItem value="mixed">Combinação de métodos</SelectItem>
-                        <SelectItem value="open">Aberta a todas as opções</SelectItem>
+                      <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                        <SelectItem value="natural" className="hover:bg-green-50">🌿 Apenas métodos naturais</SelectItem>
+                        <SelectItem value="epidural" className="hover:bg-blue-50">💉 Anestesia peridural</SelectItem>
+                        <SelectItem value="nitrous_oxide" className="hover:bg-purple-50">💨 Óxido nitroso</SelectItem>
+                        <SelectItem value="mixed" className="hover:bg-yellow-50">🤝 Combinação de métodos</SelectItem>
+                        <SelectItem value="open" className="hover:bg-gray-50">✅ Aberta a todas as opções</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -108,7 +108,7 @@ export default function ShoppingList() {
     .reduce((sum: number, item: any) => sum + item.price, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-100 to-purple-100 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <Button
@@ -119,7 +119,7 @@ export default function ShoppingList() {
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Lista de Compras</h1>
+          <h1 className="text-2xl font-bold text-green-800">🛒 Lista de Compras</h1>
         </div>
 
         {/* Summary Card */}
@@ -187,16 +187,16 @@ export default function ShoppingList() {
                   <div>
                     <Label htmlFor="category">Categoria</Label>
                     <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white border-gray-300">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="baby">Bebê</SelectItem>
-                        <SelectItem value="mom">Mamãe</SelectItem>
-                        <SelectItem value="nursery">Quarto do Bebê</SelectItem>
-                        <SelectItem value="hospital">Maternidade</SelectItem>
-                        <SelectItem value="clothing">Roupas</SelectItem>
-                        <SelectItem value="other">Outros</SelectItem>
+                      <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                        <SelectItem value="baby" className="hover:bg-blue-50">🍼 Bebê</SelectItem>
+                        <SelectItem value="mom" className="hover:bg-pink-50">👩 Mamãe</SelectItem>
+                        <SelectItem value="nursery" className="hover:bg-green-50">🏠 Quarto do Bebê</SelectItem>
+                        <SelectItem value="hospital" className="hover:bg-blue-50">🏥 Maternidade</SelectItem>
+                        <SelectItem value="clothing" className="hover:bg-purple-50">👕 Roupas</SelectItem>
+                        <SelectItem value="other" className="hover:bg-gray-50">📦 Outros</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -204,13 +204,13 @@ export default function ShoppingList() {
                   <div>
                     <Label htmlFor="priority">Prioridade</Label>
                     <Select value={formData.priority} onValueChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white border-gray-300">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="high">Alta</SelectItem>
-                        <SelectItem value="medium">Média</SelectItem>
-                        <SelectItem value="low">Baixa</SelectItem>
+                      <SelectContent className="bg-white border border-gray-300 shadow-lg">
+                        <SelectItem value="high" className="hover:bg-red-50">🔴 Alta</SelectItem>
+                        <SelectItem value="medium" className="hover:bg-yellow-50">🟡 Média</SelectItem>
+                        <SelectItem value="low" className="hover:bg-green-50">🟢 Baixa</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -293,9 +293,13 @@ export default function ShoppingList() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => togglePurchased(item.id, item.isPurchased)}
-                                className={`p-1 ${item.isPurchased ? 'text-green-600' : 'text-gray-400'}`}
+                                className={`p-2 rounded-full border-2 transition-all ${
+                                  item.isPurchased 
+                                    ? 'bg-green-500 text-white border-green-500 hover:bg-green-600' 
+                                    : 'bg-white text-gray-400 border-gray-300 hover:bg-green-50 hover:border-green-300'
+                                }`}
                               >
-                                <Check className="w-5 h-5" />
+                                <Check className={`w-5 h-5 ${item.isPurchased ? 'block' : 'opacity-0'}`} />
                               </Button>
                               
                               <div className={`flex-1 ${item.isPurchased ? 'line-through text-gray-500' : ''}`}>

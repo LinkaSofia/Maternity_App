@@ -61,13 +61,14 @@ export default function KickCounter() {
 
   const handleStop = () => {
     if (startTime && kickCount > 0) {
-      saveKickCounter.mutate({
+      const sessionData = {
         date: new Date().toISOString().split('T')[0],
         kickCount,
         timeStarted: startTime.toISOString(),
         timeEnded: new Date().toISOString(),
         notes: `${kickCount} chutes em ${formatTime(elapsedTime)}`
-      });
+      };
+      saveKickCounter.mutate(sessionData);
     } else {
       resetCounter();
     }
@@ -95,18 +96,18 @@ export default function KickCounter() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setLocation('/home')}
-            className="mr-4"
+            className="mr-4 bg-white/50 backdrop-blur-sm hover:bg-white/70"
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Contador de Chutes</h1>
+          <h1 className="text-2xl font-bold text-purple-800">👶 Contador de Chutes</h1>
         </div>
 
         {/* Main Counter */}
@@ -179,7 +180,7 @@ export default function KickCounter() {
                       <Button 
                         onClick={() => setIsActive(true)}
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 border-green-300 hover:bg-green-50 hover:border-green-400 bg-white text-green-700"
                       >
                         <Play className="w-4 h-4 mr-2" />
                         Continuar
@@ -189,7 +190,7 @@ export default function KickCounter() {
                     <Button 
                       onClick={handleStop}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 border-gray-300 hover:bg-red-50 hover:border-red-300 bg-white"
                     >
                       <Square className="w-4 h-4 mr-2" />
                       Finalizar
@@ -199,6 +200,7 @@ export default function KickCounter() {
                       onClick={resetCounter}
                       variant="outline"
                       size="icon"
+                      className="border-gray-300 hover:bg-gray-50 hover:border-gray-400 bg-white"
                     >
                       <RotateCcw className="w-4 h-4" />
                     </Button>

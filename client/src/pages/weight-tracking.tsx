@@ -55,7 +55,7 @@ export default function WeightTracking() {
   const weightChange = currentWeight - previousWeight;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <Button
@@ -66,7 +66,7 @@ export default function WeightTracking() {
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Controle de Peso</h1>
+          <h1 className="text-2xl font-bold text-pink-800">⚖️ Controle de Peso</h1>
         </div>
 
         {/* Weight Summary Card */}
