@@ -10,6 +10,18 @@ import Home from "@/pages/home";
 import Setup from "@/pages/setup";
 import Diary from "@/pages/diary";
 import Appointments from "@/pages/appointments";
+import WeightTracking from "@/pages/weight-tracking";
+import KickCounter from "@/pages/kick-counter";
+import ShoppingList from "@/pages/shopping-list";
+import BellyPhotos from "@/pages/belly-photos";
+import Exercises from "@/pages/exercises";
+import Recipes from "@/pages/recipes";
+import Symptoms from "@/pages/symptoms";
+import Medications from "@/pages/medications";
+import BirthPlan from "@/pages/birth-plan";
+import Community from "@/pages/community";
+import Baby from "@/pages/baby";
+import Tips from "@/pages/tips";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -69,8 +81,21 @@ function Router() {
           ) : (
             <>
               <Route path="/" component={Home} />
+              <Route path="/home" component={Home} />
               <Route path="/diary" component={Diary} />
               <Route path="/appointments" component={Appointments} />
+              <Route path="/weight-tracking" component={WeightTracking} />
+              <Route path="/kick-counter" component={KickCounter} />
+              <Route path="/shopping-list" component={ShoppingList} />
+              <Route path="/belly-photos" component={BellyPhotos} />
+              <Route path="/exercises" component={Exercises} />
+              <Route path="/recipes" component={Recipes} />
+              <Route path="/symptoms" component={Symptoms} />
+              <Route path="/medications" component={Medications} />
+              <Route path="/birth-plan" component={BirthPlan} />
+              <Route path="/community" component={Community} />
+              <Route path="/baby" component={Baby} />
+              <Route path="/tips" component={Tips} />
             </>
           )}
         </>

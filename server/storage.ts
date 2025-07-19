@@ -5,6 +5,17 @@ import {
   appointments,
   weightEntries,
   babyDevelopment,
+  kickCounters,
+  shoppingItems,
+  bellyPhotos,
+  exercises,
+  recipes,
+  symptoms,
+  medications,
+  birthPlans,
+  communityPosts,
+  communityReplies,
+  communityLikes,
   type User,
   type UpsertUser,
   type Pregnancy,
@@ -52,6 +63,51 @@ export interface IStorage {
   // Baby development
   getBabyDevelopment(week: number): Promise<BabyDevelopment | undefined>;
   getAllBabyDevelopment(): Promise<BabyDevelopment[]>;
+
+  // Kick counter
+  createKickCounterSession(session: any): Promise<any>;
+  getKickCounterSessions(userId: string): Promise<any[]>;
+  
+  // Shopping list
+  createShoppingListItem(item: any): Promise<any>;
+  getShoppingListItems(userId: string): Promise<any[]>;
+  updateShoppingListItem(id: number, item: Partial<any>): Promise<any>;
+  deleteShoppingListItem(id: number): Promise<void>;
+  
+  // Belly photos
+  createBellyPhoto(photo: any): Promise<any>;
+  getBellyPhotos(userId: string): Promise<any[]>;
+  deleteBellyPhoto(id: number): Promise<void>;
+  
+  // Exercise videos
+  getAllExerciseVideos(): Promise<any[]>;
+  
+  // Recipes
+  getAllRecipes(): Promise<any[]>;
+  
+  // Symptoms
+  createSymptomEntry(symptom: any): Promise<any>;
+  getSymptomEntries(userId: string): Promise<any[]>;
+  updateSymptomEntry(id: number, symptom: Partial<any>): Promise<any>;
+  deleteSymptomEntry(id: number): Promise<void>;
+  
+  // Medications
+  createMedication(medication: any): Promise<any>;
+  getMedications(userId: string): Promise<any[]>;
+  updateMedication(id: number, medication: Partial<any>): Promise<any>;
+  deleteMedication(id: number): Promise<void>;
+  
+  // Birth plans
+  createBirthPlan(birthPlan: any): Promise<any>;
+  getBirthPlan(userId: string): Promise<any | undefined>;
+  updateBirthPlan(id: number, birthPlan: Partial<any>): Promise<any>;
+  
+  // Community
+  createCommunityPost(post: any): Promise<any>;
+  getCommunityPosts(): Promise<any[]>;
+  createCommunityReply(reply: any): Promise<any>;
+  getCommunityReplies(): Promise<any[]>;
+  createCommunityLike(like: any): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -243,6 +299,226 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(babyDevelopment)
       .orderBy(babyDevelopment.week);
+  }
+
+  // Kick counter operations
+  async createKickCounterSession(session: any): Promise<any> {
+    const [newSession] = await db
+      .insert(kickCounters)
+      .values(session)
+      .returning();
+    return newSession;
+  }
+
+  async getKickCounterSessions(userId: string): Promise<any[]> {
+    return await db
+      .select()
+      .from(kickCounters)
+      .where(eq(kickCounters.userId, userId))
+      .orderBy(desc(kickCounters.date));
+  }
+
+  // Shopping list operations
+  async createShoppingListItem(item: any): Promise<any> {
+    const [newItem] = await db
+      .insert(shoppingItems)
+      .values(item)
+      .returning();
+    return newItem;
+  }
+
+  async getShoppingListItems(userId: string): Promise<any[]> {
+    return await db
+      .select()
+      .from(shoppingItems)
+      .where(eq(shoppingItems.userId, userId))
+      .orderBy(desc(shoppingItems.createdAt));
+  }
+
+  async updateShoppingListItem(id: number, item: Partial<any>): Promise<any> {
+    const [updated] = await db
+      .update(shoppingItems)
+      .set({ ...item, updatedAt: new Date() })
+      .where(eq(shoppingItems.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteShoppingListItem(id: number): Promise<void> {
+    await db.delete(shoppingItems).where(eq(shoppingItems.id, id));
+  }
+
+  // Belly photos operations
+  async createBellyPhoto(photo: InsertBellyPhoto): Promise<BellyPhoto> {
+    const [newPhoto] = await db
+      .insert(bellyPhotos)
+      .values({
+        ...photo,
+        date: typeof photo.date === 'string' ? new Date(photo.date) : photo.date,
+      })
+      .returning();
+    return newPhoto;
+  }
+
+  async getBellyPhotos(userId: string): Promise<BellyPhoto[]> {
+    return await db
+      .select()
+      .from(bellyPhotos)
+      .where(eq(bellyPhotos.userId, userId))
+      .orderBy(desc(bellyPhotos.date));
+  }
+
+  async deleteBellyPhoto(id: number): Promise<void> {
+    await db.delete(bellyPhotos).where(eq(bellyPhotos.id, id));
+  }
+
+  // Exercise videos operations
+  async getAllExerciseVideos(): Promise<any[]> {
+    return await db
+      .select()
+      .from(exercises)
+      .orderBy(exercises.title);
+  }
+
+  // Recipes operations
+  async getAllRecipes(): Promise<any[]> {
+    return await db
+      .select()
+      .from(recipes)
+      .orderBy(recipes.title);
+  }
+
+  // Symptoms operations
+  async createSymptomEntry(symptom: any): Promise<any> {
+    const [newSymptom] = await db
+      .insert(symptoms)
+      .values({
+        ...symptom,
+        date: typeof symptom.date === 'string' ? new Date(symptom.date) : symptom.date,
+      })
+      .returning();
+    return newSymptom;
+  }
+
+  async getSymptomEntries(userId: string): Promise<any[]> {
+    return await db
+      .select()
+      .from(symptoms)
+      .where(eq(symptoms.userId, userId))
+      .orderBy(desc(symptoms.date));
+  }
+
+  async updateSymptomEntry(id: number, symptom: Partial<any>): Promise<any> {
+    const updateData: any = { ...symptom, updatedAt: new Date() };
+    if (symptom.date) {
+      updateData.date = typeof symptom.date === 'string' ? new Date(symptom.date) : symptom.date;
+    }
+    const [updated] = await db
+      .update(symptoms)
+      .set(updateData)
+      .where(eq(symptoms.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteSymptomEntry(id: number): Promise<void> {
+    await db.delete(symptoms).where(eq(symptoms.id, id));
+  }
+
+  // Medications operations
+  async createMedication(medication: any): Promise<any> {
+    const [newMedication] = await db
+      .insert(medications)
+      .values(medication)
+      .returning();
+    return newMedication;
+  }
+
+  async getMedications(userId: string): Promise<any[]> {
+    return await db
+      .select()
+      .from(medications)
+      .where(eq(medications.userId, userId))
+      .orderBy(medications.name);
+  }
+
+  async updateMedication(id: number, medication: Partial<any>): Promise<any> {
+    const [updated] = await db
+      .update(medications)
+      .set({ ...medication, updatedAt: new Date() })
+      .where(eq(medications.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteMedication(id: number): Promise<void> {
+    await db.delete(medications).where(eq(medications.id, id));
+  }
+
+  // Birth plans operations
+  async createBirthPlan(birthPlan: any): Promise<any> {
+    const [newBirthPlan] = await db
+      .insert(birthPlans)
+      .values(birthPlan)
+      .returning();
+    return newBirthPlan;
+  }
+
+  async getBirthPlan(userId: string): Promise<any | undefined> {
+    const [birthPlan] = await db
+      .select()
+      .from(birthPlans)
+      .where(eq(birthPlans.userId, userId))
+      .orderBy(desc(birthPlans.createdAt));
+    return birthPlan;
+  }
+
+  async updateBirthPlan(id: number, birthPlan: Partial<any>): Promise<any> {
+    const [updated] = await db
+      .update(birthPlans)
+      .set({ ...birthPlan, updatedAt: new Date() })
+      .where(eq(birthPlans.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Community operations
+  async createCommunityPost(post: any): Promise<any> {
+    const [newPost] = await db
+      .insert(communityPosts)
+      .values(post)
+      .returning();
+    return newPost;
+  }
+
+  async getCommunityPosts(): Promise<any[]> {
+    return await db
+      .select()
+      .from(communityPosts)
+      .orderBy(desc(communityPosts.createdAt));
+  }
+
+  async createCommunityReply(reply: any): Promise<any> {
+    const [newReply] = await db
+      .insert(communityReplies)
+      .values(reply)
+      .returning();
+    return newReply;
+  }
+
+  async getCommunityReplies(): Promise<any[]> {
+    return await db
+      .select()
+      .from(communityReplies)
+      .orderBy(desc(communityReplies.createdAt));
+  }
+
+  async createCommunityLike(like: any): Promise<any> {
+    const [newLike] = await db
+      .insert(communityLikes)
+      .values(like)
+      .returning();
+    return newLike;
   }
 }
 

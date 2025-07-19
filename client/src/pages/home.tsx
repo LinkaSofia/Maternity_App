@@ -9,7 +9,7 @@ import Header from "@/components/header";
 import Baby3DModel from "@/components/baby-3d-model";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star, BookOpen, Stethoscope, ArrowRight } from "lucide-react";
+import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star, BookOpen, Stethoscope, ArrowRight, Activity, ShoppingCart, Camera, Dumbbell, ChefHat, Pill, FileText, Users } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function Home() {
@@ -218,6 +218,163 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
+
+          {/* New Features Navigation */}
+          <Card className="bg-gradient-to-br from-white to-gray-50 rounded-2xl card-shadow border-0">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <Sparkles className="mr-2 text-indigo-500" size={20} />
+                Ferramentas de Acompanhamento
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Weight Tracking */}
+                <div 
+                  onClick={() => navigate("/weight-tracking")}
+                  className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-green-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Weight className="text-green-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Peso</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Controle de peso com gráficos</p>
+                </div>
+
+                {/* Kick Counter */}
+                <div 
+                  onClick={() => navigate("/kick-counter")}
+                  className="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-blue-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Activity className="text-blue-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Chutes</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Contador de chutes do bebê</p>
+                </div>
+
+                {/* Shopping List */}
+                <div 
+                  onClick={() => navigate("/shopping-list")}
+                  className="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-purple-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <ShoppingCart className="text-purple-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Compras</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Lista de enxoval e necessidades</p>
+                </div>
+
+                {/* Belly Photos */}
+                <div 
+                  onClick={() => navigate("/belly-photos")}
+                  className="bg-gradient-to-br from-pink-50 to-pink-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-pink-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Camera className="text-pink-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Fotos</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Timeline da barriga</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Health & Wellness */}
+          <Card className="bg-gradient-to-br from-white to-gray-50 rounded-2xl card-shadow border-0">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <Heart className="mr-2 text-red-500" size={20} />
+                Saúde & Bem-estar
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Exercises */}
+                <div 
+                  onClick={() => navigate("/exercises")}
+                  className="bg-gradient-to-br from-orange-50 to-orange-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-orange-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Dumbbell className="text-orange-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Exercícios</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Exercícios seguros para gestantes</p>
+                </div>
+
+                {/* Recipes */}
+                <div 
+                  onClick={() => navigate("/recipes")}
+                  className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-yellow-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <ChefHat className="text-yellow-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Receitas</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Alimentação saudável na gravidez</p>
+                </div>
+
+                {/* Symptoms */}
+                <div 
+                  onClick={() => navigate("/symptoms")}
+                  className="bg-gradient-to-br from-red-50 to-red-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-red-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Activity className="text-red-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Sintomas</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Registro de sintomas</p>
+                </div>
+
+                {/* Medications */}
+                <div 
+                  onClick={() => navigate("/medications")}
+                  className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-3 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-indigo-200"
+                >
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Pill className="text-indigo-600" size={16} />
+                    <span className="text-sm font-semibold text-gray-800">Medicações</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Controle de medicamentos</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Planning & Community */}
+          <Card className="bg-gradient-to-br from-white to-gray-50 rounded-2xl card-shadow border-0">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <Users className="mr-2 text-indigo-500" size={20} />
+                Planejamento & Comunidade
+              </h3>
+              <div className="grid grid-cols-1 gap-3">
+                {/* Birth Plan */}
+                <div 
+                  onClick={() => navigate("/birth-plan")}
+                  className="bg-gradient-to-br from-rose-50 to-rose-100 p-4 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-rose-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <FileText className="text-rose-600" size={20} />
+                    <div>
+                      <span className="text-sm font-semibold text-gray-800 block">Plano de Parto</span>
+                      <p className="text-xs text-gray-600">Planeje seu parto ideal</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Community */}
+                <div 
+                  onClick={() => navigate("/community")}
+                  className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl cursor-pointer hover:shadow-md transition-all hover:scale-105 border border-purple-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Users className="text-purple-600" size={20} />
+                    <div>
+                      <span className="text-sm font-semibold text-gray-800 block">Comunidade</span>
+                      <p className="text-xs text-gray-600">Conecte-se com outras mães</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Recent Activities */}
           <Card className="bg-gradient-to-br from-white to-indigo-50 rounded-2xl card-shadow border-0 border border-indigo-100">
