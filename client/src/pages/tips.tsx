@@ -116,8 +116,8 @@ export default function Tips() {
           <div className="space-y-3">
             {educationalContent.map((content, index) => (
               <div key={index} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 smooth-transition cursor-pointer">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg flex items-center justify-center">
-                  <BookOpen className="text-pink-600" size={20} />
+                <div className="w-8 h-8 bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg flex items-center justify-center">
+                  <BookOpen className="text-pink-600" size={16} />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-800">{content.title}</h3>

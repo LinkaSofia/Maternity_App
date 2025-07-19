@@ -27,8 +27,8 @@ const setupSchema = z.object({
   dateType: z.enum(["lmp", "due"], { required_error: "Escolha uma opção de data" }),
   lastMenstrualPeriod: z.string().optional(),
   dueDate: z.string().optional(),
-  prePregnancyWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg").optional(),
-  currentWeight: z.number().min(30, "Peso deve ser maior que 30kg").max(200, "Peso deve ser menor que 200kg").optional(),
+  prePregnancyWeight: z.number().optional(),
+  currentWeight: z.number().optional(),
 }).refine((data) => {
   if (data.dateType === "lmp" && !data.lastMenstrualPeriod) {
     return false;

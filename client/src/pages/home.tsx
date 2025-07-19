@@ -41,7 +41,7 @@ export default function Home() {
   const progressPercentage = Math.min((currentWeek / 40) * 100, 100);
 
   return (
-    <div className="max-w-sm mx-auto bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 min-h-screen shadow-2xl">
+    <div className="max-w-sm mx-auto bg-gradient-to-br from-pink-100 via-purple-100 to-indigo-100 min-h-screen shadow-2xl">
       {/* Header */}
       <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-6 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>

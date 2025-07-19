@@ -111,10 +111,6 @@ export default function Landing() {
         <div className="space-y-4 fade-in">
           <Card className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-3xl shadow-2xl border-0 overflow-hidden">
             <CardContent className="p-6 text-center relative">
-              {/* Heart decoration */}
-              <div className="absolute top-2 right-2 w-12 h-12 opacity-20">
-                <Heart className="text-white w-full h-full" />
-              </div>
               
               <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Heart className="text-white" size={24} />

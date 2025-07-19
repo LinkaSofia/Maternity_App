@@ -9,23 +9,36 @@ interface Baby3DModelProps {
 
 export default function Baby3DModel({ week, size = "medium" }: Baby3DModelProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
 
   useEffect(() => {
     setIsAnimating(true);
     const timer = setTimeout(() => setIsAnimating(false), 2000);
-    return () => clearTimeout(timer);
+    
+    // Add periodic movement animation
+    const movementInterval = setInterval(() => {
+      setIsMoving(true);
+      setTimeout(() => setIsMoving(false), 1000);
+    }, 5000);
+    
+    return () => {
+      clearTimeout(timer);
+      clearInterval(movementInterval);
+    };
   }, [week]);
 
   const getBabySize = () => {
-    if (week <= 8) return { width: 20, height: 20 };
-    if (week <= 12) return { width: 30, height: 30 };
-    if (week <= 16) return { width: 40, height: 40 };
-    if (week <= 20) return { width: 50, height: 50 };
-    if (week <= 24) return { width: 60, height: 60 };
-    if (week <= 28) return { width: 70, height: 70 };
-    if (week <= 32) return { width: 80, height: 80 };
-    if (week <= 36) return { width: 90, height: 90 };
-    return { width: 100, height: 100 };
+    const baseSize = size === "small" ? 0.7 : size === "large" ? 1.3 : 1;
+    if (week <= 4) return { scale: 0.3 * baseSize };
+    if (week <= 8) return { scale: 0.4 * baseSize };
+    if (week <= 12) return { scale: 0.5 * baseSize };
+    if (week <= 16) return { scale: 0.6 * baseSize };
+    if (week <= 20) return { scale: 0.7 * baseSize };
+    if (week <= 24) return { scale: 0.8 * baseSize };
+    if (week <= 28) return { scale: 0.9 * baseSize };
+    if (week <= 32) return { scale: 1.0 * baseSize };
+    if (week <= 36) return { scale: 1.1 * baseSize };
+    return { scale: 1.2 * baseSize };
   };
 
   const getBabyColor = () => {
@@ -86,31 +99,44 @@ export default function Baby3DModel({ week, size = "medium" }: Baby3DModelProps)
   const description = getBabyDescription();
   const fruitComparison = getFruitComparison();
 
+  const { scale } = getBabySize();
+
   return (
-    <div className="relative">
+    <div className="relative flex flex-col items-center">
       {/* Baby 3D Model */}
-      <div className={`${sizeClasses[size]} relative mx-auto`}>
-        {/* Glow effect */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${colorClass} rounded-full blur-lg opacity-50 animate-pulse`}></div>
+      <div className={`${sizeClasses[size]} relative mx-auto`} style={{ transform: `scale(${scale})` }}>
+        {/* Ambient glow effect */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${colorClass} rounded-full blur-2xl opacity-40 animate-pulse`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${colorClass} rounded-full blur-lg opacity-30 animate-pulse delay-1000`}></div>
         
         {/* Main baby body */}
-        <div className={`relative w-full h-full bg-gradient-to-br ${colorClass} rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20 transform transition-all duration-500 ${
-          isAnimating ? 'scale-110 rotate-12' : 'scale-100 rotate-0'
-        }`}>
+        <div className={`relative w-full h-full bg-gradient-to-br ${colorClass} rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 transform transition-all duration-700 ${
+          isAnimating ? 'scale-110 rotate-12' : isMoving ? 'scale-105 -rotate-6' : 'scale-100 rotate-0'
+        } hover:scale-105 cursor-pointer`}>
+          
+          {/* Heartbeat effect */}
+          {week > 6 && (
+            <div className="absolute inset-0 rounded-full border-2 border-red-300 animate-ping opacity-20"></div>
+          )}
           
           {/* Baby face */}
           <div className="relative w-3/4 h-3/4 flex flex-col items-center justify-center">
             {/* Eyes */}
             {features.eyes && (
               <div className="flex space-x-2 mb-1">
-                <div className="w-2 h-2 bg-black rounded-full animate-blink"></div>
-                <div className="w-2 h-2 bg-black rounded-full animate-blink delay-1000"></div>
+                <div className="w-2 h-2 bg-slate-800 rounded-full animate-pulse shadow-sm"></div>
+                <div className="w-2 h-2 bg-slate-800 rounded-full animate-pulse delay-500 shadow-sm"></div>
               </div>
+            )}
+            
+            {/* Nose */}
+            {week > 10 && (
+              <div className="w-1 h-1 bg-pink-300 rounded-full mb-1 opacity-70"></div>
             )}
             
             {/* Mouth */}
             {features.mouth && (
-              <div className="w-3 h-1 bg-pink-400 rounded-full mt-1"></div>
+              <div className="w-3 h-1 bg-pink-400 rounded-full mt-1 shadow-sm"></div>
             )}
             
             {/* Cheeks */}
@@ -119,13 +145,25 @@ export default function Baby3DModel({ week, size = "medium" }: Baby3DModelProps)
           </div>
           
           {/* Limbs */}
-          {features.limbs && (
+          {features.limbs && week > 8 && (
             <>
-              <div className="absolute top-2 left-1 w-1 h-2 bg-gradient-to-b ${colorClass} rounded-full"></div>
-              <div className="absolute top-2 right-1 w-1 h-2 bg-gradient-to-b ${colorClass} rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-1 h-2 bg-gradient-to-t ${colorClass} rounded-full"></div>
-              <div className="absolute bottom-2 right-2 w-1 h-2 bg-gradient-to-t ${colorClass} rounded-full"></div>
+              {/* Arms */}
+              <div className={`absolute top-3 left-0 w-1 h-3 bg-gradient-to-b ${colorClass} rounded-full shadow-sm transform rotate-12 ${isMoving ? 'animate-pulse' : ''}`}></div>
+              <div className={`absolute top-3 right-0 w-1 h-3 bg-gradient-to-b ${colorClass} rounded-full shadow-sm transform -rotate-12 ${isMoving ? 'animate-pulse delay-200' : ''}`}></div>
+              
+              {/* Legs */}
+              {week > 12 && (
+                <>
+                  <div className={`absolute bottom-1 left-2 w-1 h-3 bg-gradient-to-b ${colorClass} rounded-full shadow-sm transform rotate-6 ${isMoving ? 'animate-pulse delay-100' : ''}`}></div>
+                  <div className={`absolute bottom-1 right-2 w-1 h-3 bg-gradient-to-b ${colorClass} rounded-full shadow-sm transform -rotate-6 ${isMoving ? 'animate-pulse delay-300' : ''}`}></div>
+                </>
+              )}
             </>
+          )}
+          
+          {/* Movement indicator */}
+          {week > 16 && isMoving && (
+            <div className="absolute inset-0 rounded-full border-2 border-yellow-300 animate-ping opacity-50"></div>
           )}
         </div>
         
