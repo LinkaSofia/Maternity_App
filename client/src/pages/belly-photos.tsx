@@ -23,14 +23,10 @@ export default function BellyPhotos() {
 
   const { data: bellyPhotos = [], isLoading } = useQuery({
     queryKey: ['/api/belly-photos'],
-    queryFn: () => apiRequest('/api/belly-photos'),
   });
 
   const createBellyPhoto = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/belly-photos', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/belly-photos', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/belly-photos'] });
       setShowForm(false);

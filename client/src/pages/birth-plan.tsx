@@ -34,21 +34,14 @@ export default function BirthPlan() {
 
   const { data: birthPlan, isLoading } = useQuery({
     queryKey: ['/api/birth-plan'],
-    queryFn: () => apiRequest('/api/birth-plan'),
   });
 
   const saveBirthPlan = useMutation({
     mutationFn: (data: any) => {
       if (birthPlan) {
-        return apiRequest(`/api/birth-plan/${birthPlan.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify(data),
-        });
+        return apiRequest('PUT', `/api/birth-plan/${birthPlan.id}`, data);
       } else {
-        return apiRequest('/api/birth-plan', {
-          method: 'POST',
-          body: JSON.stringify(data),
-        });
+        return apiRequest('POST', '/api/birth-plan', data);
       }
     },
     onSuccess: () => {

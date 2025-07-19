@@ -22,17 +22,13 @@ export default function WeightTracking() {
   const queryClient = useQueryClient();
 
   const { data: weightEntries = [], isLoading } = useQuery({
-    queryKey: ['/api/weight-entries'],
-    queryFn: () => apiRequest('/api/weight-entries'),
+    queryKey: ['/api/weight'],
   });
 
   const createWeightEntry = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/weight-entries', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/weight', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/weight-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/weight'] });
       setShowForm(false);
       setFormData({ weight: "", date: new Date().toISOString().split('T')[0], notes: "" });
     },

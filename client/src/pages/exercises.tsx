@@ -16,20 +16,15 @@ export default function Exercises() {
   const queryClient = useQueryClient();
 
   const { data: exercises = [], isLoading } = useQuery({
-    queryKey: ['/api/exercises'],
-    queryFn: () => apiRequest('/api/exercises'),
+    queryKey: ['/api/exercise-videos'],
   });
 
   const { data: exerciseLog = [] } = useQuery({
     queryKey: ['/api/exercise-log'],
-    queryFn: () => apiRequest('/api/exercise-log'),
   });
 
   const logExercise = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/exercise-log', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/exercise-log', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/exercise-log'] });
     },

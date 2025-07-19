@@ -29,20 +29,15 @@ export default function Community() {
 
   const { data: communityPosts = [], isLoading } = useQuery({
     queryKey: ['/api/community-posts'],
-    queryFn: () => apiRequest('/api/community-posts'),
   });
 
   const { data: replies = [] } = useQuery({
     queryKey: ['/api/community-replies'],
-    queryFn: () => apiRequest('/api/community-replies'),
     enabled: showReplies !== null
   });
 
   const createPost = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/community-posts', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/community-posts', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/community-posts'] });
       setShowForm(false);
@@ -51,10 +46,7 @@ export default function Community() {
   });
 
   const createReply = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/community-replies', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/community-replies', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/community-replies'] });
       setReplyText("");
@@ -67,10 +59,7 @@ export default function Community() {
         // Remove like logic would go here
         return Promise.resolve();
       } else {
-        return apiRequest('/api/community-likes', {
-          method: 'POST',
-          body: JSON.stringify({ postId }),
-        });
+        return apiRequest('POST', '/api/community-likes', { postId });
       }
     },
     onSuccess: () => {

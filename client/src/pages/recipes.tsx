@@ -18,26 +18,19 @@ export default function Recipes() {
 
   const { data: recipes = [], isLoading } = useQuery({
     queryKey: ['/api/recipes'],
-    queryFn: () => apiRequest('/api/recipes'),
   });
 
   const { data: favoriteRecipes = [] } = useQuery({
     queryKey: ['/api/favorite-recipes'],
-    queryFn: () => apiRequest('/api/favorite-recipes'),
   });
 
   const toggleFavorite = useMutation({
     mutationFn: ({ recipeId, isFavorite }: { recipeId: number, isFavorite: boolean }) => {
       if (isFavorite) {
         const favorite = favoriteRecipes.find((f: any) => f.recipeId === recipeId);
-        return apiRequest(`/api/favorite-recipes/${favorite.id}`, {
-          method: 'DELETE',
-        });
+        return apiRequest('DELETE', `/api/favorite-recipes/${favorite.id}`);
       } else {
-        return apiRequest('/api/favorite-recipes', {
-          method: 'POST',
-          body: JSON.stringify({ recipeId }),
-        });
+        return apiRequest('POST', '/api/favorite-recipes', { recipeId });
       }
     },
     onSuccess: () => {

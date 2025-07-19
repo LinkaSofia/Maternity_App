@@ -27,14 +27,10 @@ export default function Symptoms() {
 
   const { data: symptoms = [], isLoading } = useQuery({
     queryKey: ['/api/symptoms'],
-    queryFn: () => apiRequest('/api/symptoms'),
   });
 
   const createSymptom = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/symptoms', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/symptoms', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/symptoms'] });
       setShowForm(false);

@@ -25,17 +25,13 @@ export default function ShoppingList() {
   const queryClient = useQueryClient();
 
   const { data: shoppingItems = [], isLoading } = useQuery({
-    queryKey: ['/api/shopping-items'],
-    queryFn: () => apiRequest('/api/shopping-items'),
+    queryKey: ['/api/shopping-list'],
   });
 
   const createShoppingItem = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/shopping-items', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/shopping-list', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/shopping-items'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/shopping-list'] });
       setShowForm(false);
       setFormData({ name: "", category: "baby", priority: "medium", price: "", store: "", notes: "" });
     },
@@ -43,21 +39,16 @@ export default function ShoppingList() {
 
   const updateShoppingItem = useMutation({
     mutationFn: ({ id, data }: { id: number, data: any }) => 
-      apiRequest(`/api/shopping-items/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-      }),
+      apiRequest('PUT', `/api/shopping-list/${id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/shopping-items'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/shopping-list'] });
     },
   });
 
   const deleteShoppingItem = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/shopping-items/${id}`, {
-      method: 'DELETE',
-    }),
+    mutationFn: (id: number) => apiRequest('DELETE', `/api/shopping-list/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/shopping-items'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/shopping-list'] });
     },
   });
 

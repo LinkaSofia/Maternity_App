@@ -30,19 +30,14 @@ export default function Medications() {
 
   const { data: medications = [], isLoading } = useQuery({
     queryKey: ['/api/medications'],
-    queryFn: () => apiRequest('/api/medications'),
   });
 
   const { data: medicationLog = [] } = useQuery({
     queryKey: ['/api/medication-log'],
-    queryFn: () => apiRequest('/api/medication-log'),
   });
 
   const createMedication = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/medications', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/medications', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/medications'] });
       setShowForm(false);
@@ -61,20 +56,14 @@ export default function Medications() {
 
   const updateMedication = useMutation({
     mutationFn: ({ id, data }: { id: number, data: any }) => 
-      apiRequest(`/api/medications/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-      }),
+      apiRequest('PUT', `/api/medications/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/medications'] });
     },
   });
 
   const logMedication = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/medication-log', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/medication-log', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/medication-log'] });
     },

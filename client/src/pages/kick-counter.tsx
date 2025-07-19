@@ -27,7 +27,7 @@ export default function KickCounter() {
   }, [isActive, startTime]);
 
   const { data: todayCounter } = useQuery({
-    queryKey: ['/api/kick-counters', 'today'],
+    queryKey: ['/api/kick-counters/today'],
   });
 
   const { data: recentCounters = [] } = useQuery({
