@@ -21,6 +21,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { firstName, lastName, fullName, phone, birthDate, profileImageData } = req.body;
+      
+      const updatedUser = await storage.updateUser(userId, {
+        firstName,
+        lastName,
+        fullName,
+        phone,
+        birthDate,
+        profileImageData,
+      });
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(400).json({ message: "Failed to update user" });
+    }
+  });
+
   // Pregnancy routes
   app.post('/api/pregnancies', isAuthenticated, async (req: any, res) => {
     try {

@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Baby, Heart, BookOpen, Lightbulb, Sparkles } from "lucide-react";
-import motherBabyImage from "@assets/image_1752428001266.png";
-import heartImage from "@assets/image_1752428013534.png";
 
 export default function Landing() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,11 +27,7 @@ export default function Landing() {
         <div className="text-center mb-8 fade-in">
           <div className="relative mb-6">
             <div className="w-48 h-48 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-2xl">
-              <img 
-                src={motherBabyImage} 
-                alt="Mãe e bebê" 
-                className="w-32 h-32 object-contain"
-              />
+              <Baby className="text-pink-600" size={64} />
               <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
             </div>
             
@@ -119,7 +113,7 @@ export default function Landing() {
             <CardContent className="p-6 text-center relative">
               {/* Heart decoration */}
               <div className="absolute top-2 right-2 w-12 h-12 opacity-20">
-                <img src={heartImage} alt="Heart" className="w-full h-full object-contain" />
+                <Heart className="text-white w-full h-full" />
               </div>
               
               <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">

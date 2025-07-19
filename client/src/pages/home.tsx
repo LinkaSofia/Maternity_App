@@ -9,7 +9,7 @@ import Header from "@/components/header";
 import Baby3DModel from "@/components/baby-3d-model";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Weight, Clock, TrendingUp, Heart, Baby } from "lucide-react";
+import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
@@ -45,6 +45,8 @@ export default function Home() {
       {/* Header */}
       <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-6 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-4 right-4 w-16 h-16 bg-white/10 rounded-full animate-pulse"></div>
+        <div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-full animate-pulse delay-1000"></div>
         <div className="relative z-10">
           <div className="mb-4">
             <Header 
@@ -66,28 +68,38 @@ export default function Home() {
       {activeTab === "home" && (
         <div className="p-6 space-y-6">
           {/* Modelo 3D do Bebê - Destaque Principal */}
-          <Card className="bg-white/80 backdrop-blur-sm rounded-2xl card-shadow border-0 overflow-hidden">
-            <CardContent className="p-8 text-center">
-              <div className="mb-4">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  Seu Bebê - Semana {currentWeek}
-                </h2>
-                <p className="text-gray-600 text-sm">
+          <Card className="bg-gradient-to-br from-pink-100 via-purple-100 to-indigo-100 backdrop-blur-sm rounded-3xl card-shadow border-0 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-200/30 to-purple-200/30 rounded-full -translate-y-16 translate-x-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-indigo-200/30 to-blue-200/30 rounded-full translate-y-12 -translate-x-12"></div>
+            <CardContent className="p-8 text-center relative z-10">
+              <div className="mb-6">
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <Star className="text-yellow-500" size={20} />
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                    Seu Bebê - Semana {currentWeek}
+                  </h2>
+                  <Star className="text-yellow-500" size={20} />
+                </div>
+                <p className="text-gray-700 text-sm font-medium">
                   {currentWeek <= 12 ? "Primeiro trimestre" : 
                    currentWeek <= 28 ? "Segundo trimestre" : "Terceiro trimestre"}
                 </p>
               </div>
               
               <div className="flex justify-center mb-6">
-                <Baby3DModel week={currentWeek} size="large" />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-200 to-purple-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                  <Baby3DModel week={currentWeek} size="large" />
+                </div>
               </div>
               
-              <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl p-4">
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <Heart className="text-pink-500" size={16} />
-                  <span className="text-sm font-medium text-gray-700">
+              <div className="bg-gradient-to-r from-pink-200 to-purple-200 rounded-2xl p-4 border border-pink-300/50">
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <Heart className="text-pink-600" size={18} />
+                  <span className="text-sm font-bold text-gray-800">
                     Desenvolvimento atual
                   </span>
+                  <Heart className="text-pink-600" size={18} />
                 </div>
                 <BabySizeComparison week={currentWeek} />
               </div>
@@ -95,20 +107,20 @@ export default function Home() {
           </Card>
 
           {/* Esta Semana - Informações Resumidas */}
-          <Card className="bg-white/80 backdrop-blur-sm rounded-2xl card-shadow border-0">
+          <Card className="bg-gradient-to-br from-white to-pink-50 backdrop-blur-sm rounded-2xl card-shadow border-0">
             <CardContent className="p-6">
               <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                <Baby className="mr-2 text-pink-500" size={20} />
+                <Sparkles className="mr-2 text-pink-500" size={20} />
                 Resumo da Semana
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4 text-center">
-                  <Calendar className="mx-auto text-pink-500 mb-2" size={24} />
+                <div className="bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl p-4 text-center border border-pink-200">
+                  <Calendar className="mx-auto text-pink-600 mb-2" size={24} />
                   <div className="text-lg font-bold text-gray-800">{currentWeek}</div>
                   <div className="text-xs text-gray-600">Semanas</div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
-                  <TrendingUp className="mx-auto text-purple-500 mb-2" size={24} />
+                <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-4 text-center border border-purple-200">
+                  <TrendingUp className="mx-auto text-purple-600 mb-2" size={24} />
                   <div className="text-lg font-bold text-gray-800">{Math.round(progressPercentage)}%</div>
                   <div className="text-xs text-gray-600">Progresso</div>
                 </div>
@@ -118,12 +130,12 @@ export default function Home() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <Card className="bg-white/80 backdrop-blur-sm rounded-2xl card-shadow border-0">
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 backdrop-blur-sm rounded-2xl card-shadow border-0 border border-green-200">
               <CardContent className="p-4 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Weight className="text-green-600" size={20} />
+                <div className="w-12 h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                  <Weight className="text-green-700" size={20} />
                 </div>
-                <p className="text-sm text-gray-600">Ganho de Peso</p>
+                <p className="text-sm text-gray-700 font-medium">Ganho de Peso</p>
                 <p className="text-lg font-semibold text-gray-800">
                   {pregnancy?.currentWeight && pregnancy?.prePregnancyWeight
                     ? `+${(pregnancy.currentWeight - pregnancy.prePregnancyWeight).toFixed(1)}kg`
@@ -132,12 +144,12 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-sm rounded-2xl card-shadow border-0">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 backdrop-blur-sm rounded-2xl card-shadow border-0 border border-blue-200">
               <CardContent className="p-4 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Calendar className="text-blue-600" size={20} />
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                  <Calendar className="text-blue-700" size={20} />
                 </div>
-                <p className="text-sm text-gray-600">Próxima Consulta</p>
+                <p className="text-sm text-gray-700 font-medium">Próxima Consulta</p>
                 <p className="text-lg font-semibold text-gray-800">
                   {upcomingAppointments?.[0]?.date
                     ? new Date(upcomingAppointments[0].date).toLocaleDateString("pt-BR", {
@@ -151,14 +163,17 @@ export default function Home() {
           </div>
 
           {/* Recent Activities */}
-          <Card className="bg-white rounded-2xl card-shadow">
+          <Card className="bg-gradient-to-br from-white to-indigo-50 rounded-2xl card-shadow border-0 border border-indigo-100">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Atividades Recentes</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <Clock className="mr-2 text-indigo-500" size={20} />
+                Atividades Recentes
+              </h2>
               <div className="space-y-3">
                 {recentEntries?.slice(0, 3).map((entry: any) => (
-                  <div key={entry.id} className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Clock className="text-primary" size={12} />
+                  <div key={entry.id} className="flex items-center space-x-3 p-3 bg-white/60 rounded-xl border border-indigo-100">
+                    <div className="w-8 h-8 bg-gradient-to-br from-indigo-200 to-indigo-300 rounded-full flex items-center justify-center">
+                      <Clock className="text-indigo-600" size={12} />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-800">
@@ -171,9 +186,17 @@ export default function Home() {
                   </div>
                 ))}
                 {(!recentEntries || recentEntries.length === 0) && (
-                  <p className="text-gray-500 text-sm text-center py-4">
-                    Nenhuma atividade recente
-                  </p>
+                  <div className="text-center py-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Clock className="text-indigo-500" size={24} />
+                    </div>
+                    <p className="text-gray-500 text-sm">
+                      Nenhuma atividade recente
+                    </p>
+                    <p className="text-gray-400 text-xs mt-1">
+                      Comece a registrar seus momentos especiais
+                    </p>
+                  </div>
                 )}
               </div>
             </CardContent>

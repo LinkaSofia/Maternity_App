@@ -137,3 +137,136 @@ Design preference: More colorful and vibrant landing page with mother-baby image
 - **Caching**: Server-side caching for static content
 
 The application is designed to be deployed on Replit with automatic database provisioning and authentication integration. The mobile-first approach ensures optimal performance on mobile devices while maintaining desktop compatibility.
+
+## 🔗 **Conexão com o Banco de Dados**
+
+O projeto usa **Neon Database** (PostgreSQL na nuvem) como banco de dados principal. Aqui estão os detalhes da conexão:
+
+### ** Configuração Atual**
+
+```typescript
+// server/db.ts
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+
+// Configuração do WebSocket para Neon
+neonConfig.webSocketConstructor = ws;
+
+// Conexão com o banco
+export const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL 
+});
+export const db = drizzle({ client: pool, schema });
+```
+
+### **🔧 Variáveis de Ambiente Necessárias**
+
+Você precisa configurar a variável `DATABASE_URL` no arquivo `.env`:
+
+```env
+# Para Neon Database (recomendado)
+DATABASE_URL=postgresql://user:password@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
+
+# Para PostgreSQL local
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/babyjourney
+```
+
+### ** Opções de Banco de Dados**
+
+#### **Opção 1: Neon Database (Recomendado)**
+1. Acesse [neon.tech](https://neon.tech)
+2. Crie uma conta gratuita
+3. Crie um novo projeto
+4. Copie a `DATABASE_URL` fornecida
+5. Cole no arquivo `.env`
+
+#### **Opção 2: PostgreSQL Local**
+```bash
+# Instalar PostgreSQL
+sudo apt-get install postgresql postgresql-contrib
+
+# Criar banco de dados
+sudo -u postgres psql
+CREATE DATABASE babyjourney;
+CREATE USER myuser WITH PASSWORD 'mypassword';
+GRANT ALL PRIVILEGES ON DATABASE babyjourney TO myuser;
+\q
+
+# Configurar .env
+DATABASE_URL=postgresql://myuser:mypassword@localhost:5432/babyjourney
+```
+
+### ** Estrutura do Banco**
+
+O projeto usa **Drizzle ORM** com as seguintes tabelas:
+
+```typescript
+<code_block_to_apply_changes_from>
+```
+
+### **🚀 Como Configurar**
+
+#### **Passo 1: Criar arquivo .env**
+```bash
+# Na raiz do projeto
+touch .env
+```
+
+#### **Passo 2: Adicionar DATABASE_URL**
+```env
+# Para Neon (recomendado)
+DATABASE_URL=postgresql://user:password@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
+
+# Para PostgreSQL local
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/babyjourney
+```
+
+#### **Passo 3: Executar migrações**
+```bash
+npm run db:push
+```
+
+#### **Passo 4: Verificar conexão**
+```bash
+npm run dev
+```
+
+### **🔍 Verificar se está funcionando**
+
+Se a conexão estiver correta, você verá:
+- ✅ Servidor iniciando sem erros
+- ✅ Migrações executadas com sucesso
+- ✅ Aplicação acessível em `http://localhost:5000`
+
+### **⚠️ Problemas Comuns**
+
+#### **Erro: "DATABASE_URL must be set"**
+```bash
+# Solução: Criar arquivo .env com a URL do banco
+echo "DATABASE_URL=sua_url_aqui" > .env
+```
+
+#### **Erro de conexão com Neon**
+```bash
+# Verificar se a URL está correta
+# Deve ter formato: postgresql://user:pass@ep-xxx.region.aws.neon.tech/db?sslmode=require
+```
+
+#### **Erro de PostgreSQL local**
+```bash
+# Verificar se PostgreSQL está rodando
+sudo systemctl status postgresql
+
+# Iniciar se necessário
+sudo systemctl start postgresql
+```
+
+### **🎯 Resumo**
+
+- **Banco**: Neon Database (PostgreSQL na nuvem)
+- **ORM**: Drizzle ORM
+- **Configuração**: Variável `DATABASE_URL` no `.env`
+- **Migrações**: `npm run db:push`
+- **Porta**: 5000 (servidor + frontend)
+
+A conexão está configurada para funcionar automaticamente com Neon Database, que é gratuito e fácil de configurar! 🚀

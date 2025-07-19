@@ -32,9 +32,11 @@ export const users = pgTable("users", {
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
+  fullName: varchar("full_name"),
   phone: varchar("phone"),
   birthDate: varchar("birth_date"),
+  profileImageUrl: varchar("profile_image_url"),
+  profileImageData: text("profile_image_data"), // Para armazenar imagem em base64
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

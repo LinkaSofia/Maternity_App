@@ -7,15 +7,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Baby, Heart, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Calendar, Baby, Heart, ArrowRight, Sparkles, CheckCircle2, Camera, User, Phone, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertPregnancySchema } from "@shared/schema";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-
 const setupSchema = z.object({
+  // Dados pessoais
+  firstName: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  lastName: z.string().min(2, "Sobrenome deve ter pelo menos 2 caracteres"),
+  fullName: z.string().min(2, "Nome completo deve ter pelo menos 2 caracteres"),
+  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
+  birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
+  profileImageData: z.string().optional(),
+  
+  // Dados da gravidez
   dateType: z.enum(["lmp", "due"], { required_error: "Escolha uma opção de data" }),
   lastMenstrualPeriod: z.string().optional(),
   dueDate: z.string().optional(),
@@ -41,10 +49,17 @@ export default function Setup() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      fullName: "",
+      phone: "",
+      birthDate: "",
+      profileImageData: "",
       dateType: undefined,
       lastMenstrualPeriod: "",
       dueDate: "",
@@ -53,8 +68,28 @@ export default function Setup() {
     },
   });
 
+  const updateUserMutation = useMutation({
+    mutationFn: async (userData: Partial<SetupFormData>) => {
+      return await apiRequest("PUT", "/api/auth/user", userData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    },
+  });
+
   const createPregnancyMutation = useMutation({
     mutationFn: async (data: SetupFormData) => {
+      // Primeiro atualiza os dados do usuário
+      await updateUserMutation.mutateAsync({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        fullName: data.fullName,
+        phone: data.phone,
+        birthDate: data.birthDate,
+        profileImageData: data.profileImageData,
+      });
+
+      // Depois cria a gravidez
       let lastMenstrualPeriod: string;
       let dueDate: string;
       
@@ -98,6 +133,19 @@ export default function Setup() {
 
   const onSubmit = (data: SetupFormData) => {
     createPregnancyMutation.mutate(data);
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setImagePreview(result);
+        form.setValue("profileImageData", result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const calculateCurrentWeek = () => {
@@ -159,11 +207,17 @@ export default function Setup() {
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 1 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
                   1
                 </div>
-                <span className="text-sm font-medium">Informações</span>
+                <span className="text-sm font-medium">Perfil</span>
               </div>
               <div className={`flex items-center space-x-2 ${currentStep >= 2 ? 'text-pink-600' : 'text-gray-400'}`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 2 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
                   2
+                </div>
+                <span className="text-sm font-medium">Gravidez</span>
+              </div>
+              <div className={`flex items-center space-x-2 ${currentStep >= 3 ? 'text-pink-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 3 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
+                  3
                 </div>
                 <span className="text-sm font-medium">Confirmação</span>
               </div>
@@ -171,7 +225,7 @@ export default function Setup() {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className="bg-gradient-to-r from-pink-400 to-pink-500 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${(currentStep / 2) * 100}%` }}
+                style={{ width: `${(currentStep / 3) * 100}%` }}
               />
             </div>
           </CardContent>
@@ -181,6 +235,179 @@ export default function Setup() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="px-8 pb-8 space-y-6 relative">
           {currentStep === 1 && (
+            <div className="space-y-6 fade-in">
+              {/* Foto de Perfil */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Camera className="text-white" size={20} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800">Sua Foto</h2>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="relative inline-block">
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center overflow-hidden shadow-lg">
+                        {imagePreview ? (
+                          <img 
+                            src={imagePreview} 
+                            alt="Foto de perfil" 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User className="text-pink-400" size={32} />
+                        )}
+                      </div>
+                      <label className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transition-all duration-200">
+                        <Camera className="text-white" size={16} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">Clique para adicionar sua foto</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Dados Pessoais */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                      <User className="text-white" size={20} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800">Seus Dados</h2>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Nome *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="rounded-xl"
+                              placeholder="Seu nome"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Sobrenome *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="rounded-xl"
+                              placeholder="Seu sobrenome"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="fullName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Nome Completo *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="rounded-xl"
+                              placeholder="Nome completo"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Telefone *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="rounded-xl"
+                              placeholder="(11) 99999-9999"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="birthDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Data de Nascimento *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="date"
+                              className="rounded-xl"
+                              max={new Date().toISOString().split('T')[0]}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Button
+                type="button"
+                onClick={() => setCurrentStep(2)}
+                disabled={
+                  !form.watch("firstName") ||
+                  !form.watch("lastName") ||
+                  !form.watch("fullName") ||
+                  !form.watch("phone") ||
+                  !form.watch("birthDate")
+                }
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                Continuar
+                <ArrowRight className="ml-2" size={20} />
+              </Button>
+            </div>
+          )}
+
+          {currentStep === 2 && (
             <div className="space-y-6 fade-in">
               {/* Date Type Selection */}
               <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
@@ -352,7 +579,7 @@ export default function Setup() {
                     <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
                       <Heart className="text-white" size={20} />
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800">Informações de Peso</h2>
+                    <h2 className="text-xl font-bold text-gray-800">Informações de Peso (Opcional)</h2>
                   </div>
                   
                   <div className="space-y-4">
@@ -362,7 +589,7 @@ export default function Setup() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Peso antes da gravidez (kg) - Opcional
+                            Peso antes da gravidez (kg)
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -385,7 +612,7 @@ export default function Setup() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Peso atual (kg) - Opcional
+                            Peso atual (kg)
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -405,23 +632,34 @@ export default function Setup() {
                 </CardContent>
               </Card>
 
-              <Button
-                type="button"
-                onClick={() => setCurrentStep(2)}
-                disabled={
-                  !form.watch("dateType") ||
-                  (form.watch("dateType") === "lmp" && !form.watch("lastMenstrualPeriod")) ||
-                  (form.watch("dateType") === "due" && !form.watch("dueDate"))
-                }
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                Continuar
-                <ArrowRight className="ml-2" size={20} />
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  disabled={
+                    !form.watch("dateType") ||
+                    (form.watch("dateType") === "lmp" && !form.watch("lastMenstrualPeriod")) ||
+                    (form.watch("dateType") === "due" && !form.watch("dueDate"))
+                  }
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  Continuar
+                  <ArrowRight className="ml-2" size={20} />
+                </Button>
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setCurrentStep(1)}
+                  className="w-full py-4 rounded-xl bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all duration-300"
+                >
+                  Voltar
+                </Button>
+              </div>
             </div>
           )}
 
-          {currentStep === 2 && (
+          {currentStep === 3 && (
             <div className="space-y-6 fade-in">
               <Card className="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
@@ -433,77 +671,104 @@ export default function Setup() {
                   </div>
                   
                   <div className="space-y-4">
-                    {form.watch("dateType") === "lmp" && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Data da última menstruação:</span>
-                        <span className="font-bold text-gray-800">
-                          {form.watch("lastMenstrualPeriod") && new Date(form.watch("lastMenstrualPeriod")).toLocaleDateString("pt-BR")}
-                        </span>
+                    {/* Dados pessoais */}
+                    <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-4">
+                      <h3 className="font-bold text-gray-800 mb-2">Dados Pessoais</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center py-1">
+                          <span className="text-gray-600 text-sm">Nome:</span>
+                          <span className="font-bold text-gray-800">{form.watch("firstName")} {form.watch("lastName")}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                          <span className="text-gray-600 text-sm">Telefone:</span>
+                          <span className="font-bold text-gray-800">{form.watch("phone")}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                          <span className="text-gray-600 text-sm">Data de nascimento:</span>
+                          <span className="font-bold text-gray-800">
+                            {form.watch("birthDate") && new Date(form.watch("birthDate")).toLocaleDateString("pt-BR")}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                    
-                    {form.watch("dateType") === "due" && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Data prevista do parto:</span>
-                        <span className="font-bold text-purple-600">
-                          {form.watch("dueDate") && new Date(form.watch("dueDate")).toLocaleDateString("pt-BR")}
-                        </span>
-                      </div>
-                    )}
-                    
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-600 font-medium">Semana atual:</span>
-                      <span className="font-bold text-pink-600">{currentWeek} semanas</span>
                     </div>
-                    
-                    {form.watch("prePregnancyWeight") && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Peso antes da gravidez:</span>
-                        <span className="font-bold text-gray-800">{form.watch("prePregnancyWeight")}kg</span>
+
+                    {/* Dados da gravidez */}
+                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4">
+                      <h3 className="font-bold text-gray-800 mb-2">Dados da Gravidez</h3>
+                      <div className="space-y-2">
+                        {form.watch("dateType") === "lmp" && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Data da última menstruação:</span>
+                            <span className="font-bold text-gray-800">
+                              {form.watch("lastMenstrualPeriod") && new Date(form.watch("lastMenstrualPeriod")).toLocaleDateString("pt-BR")}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {form.watch("dateType") === "due" && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Data prevista do parto:</span>
+                            <span className="font-bold text-purple-600">
+                              {form.watch("dueDate") && new Date(form.watch("dueDate")).toLocaleDateString("pt-BR")}
+                            </span>
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-between items-center py-1">
+                          <span className="text-gray-600 text-sm">Semana atual:</span>
+                          <span className="font-bold text-pink-600">{currentWeek} semanas</span>
+                        </div>
+                        
+                        {form.watch("prePregnancyWeight") && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Peso antes da gravidez:</span>
+                            <span className="font-bold text-gray-800">{form.watch("prePregnancyWeight")}kg</span>
+                          </div>
+                        )}
+                        
+                        {form.watch("currentWeight") && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Peso atual:</span>
+                            <span className="font-bold text-gray-800">{form.watch("currentWeight")}kg</span>
+                          </div>
+                        )}
+                        
+                        {form.watch("prePregnancyWeight") && form.watch("currentWeight") && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Ganho de peso:</span>
+                            <span className="font-bold text-green-600">
+                              +{((form.watch("currentWeight") || 0) - (form.watch("prePregnancyWeight") || 0)).toFixed(1)}kg
+                            </span>
+                          </div>
+                        )}
+                        
+                        {form.watch("dateType") === "lmp" && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Data prevista do parto:</span>
+                            <span className="font-bold text-purple-600">
+                              {form.watch("lastMenstrualPeriod") && (() => {
+                                const dueDate = new Date(form.watch("lastMenstrualPeriod"));
+                                dueDate.setDate(dueDate.getDate() + 280);
+                                return dueDate.toLocaleDateString("pt-BR");
+                              })()}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {form.watch("dateType") === "due" && (
+                          <div className="flex justify-between items-center py-1">
+                            <span className="text-gray-600 text-sm">Data da última menstruação:</span>
+                            <span className="text-gray-800">
+                              {form.watch("dueDate") && (() => {
+                                const lmpDate = new Date(form.watch("dueDate"));
+                                lmpDate.setDate(lmpDate.getDate() - 280);
+                                return lmpDate.toLocaleDateString("pt-BR");
+                              })()}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    
-                    {form.watch("currentWeight") && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Peso atual:</span>
-                        <span className="font-bold text-gray-800">{form.watch("currentWeight")}kg</span>
-                      </div>
-                    )}
-                    
-                    {form.watch("prePregnancyWeight") && form.watch("currentWeight") && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Ganho de peso:</span>
-                        <span className="font-bold text-green-600">
-                          +{((form.watch("currentWeight") || 0) - (form.watch("prePregnancyWeight") || 0)).toFixed(1)}kg
-                        </span>
-                      </div>
-                    )}
-                    
-                    {form.watch("dateType") === "lmp" && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Data prevista do parto:</span>
-                        <span className="font-bold text-purple-600">
-                          {form.watch("lastMenstrualPeriod") && (() => {
-                            const dueDate = new Date(form.watch("lastMenstrualPeriod"));
-                            dueDate.setDate(dueDate.getDate() + 280);
-                            return dueDate.toLocaleDateString("pt-BR");
-                          })()}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {form.watch("dateType") === "due" && (
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-600 font-medium">Data da última menstruação:</span>
-                        <span className="font-bold text-gray-800">
-                          {form.watch("dueDate") && (() => {
-                            const lmpDate = new Date(form.watch("dueDate"));
-                            lmpDate.setDate(lmpDate.getDate() - 280);
-                            return lmpDate.toLocaleDateString("pt-BR");
-                          })()}
-                        </span>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -512,7 +777,7 @@ export default function Setup() {
                 <Card className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-6 text-center relative">
                     <div className="absolute top-2 right-2 w-10 h-10 opacity-20">
-                      <img src={heartImage} alt="Heart" className="w-full h-full object-contain" />
+                      <Heart className="text-white" size={20} />
                     </div>
                     
                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -549,7 +814,7 @@ export default function Setup() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setCurrentStep(1)}
+                  onClick={() => setCurrentStep(2)}
                   className="w-full py-4 rounded-xl bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all duration-300"
                 >
                   Voltar
