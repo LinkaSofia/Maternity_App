@@ -35,8 +35,16 @@ export const users = pgTable("users", {
   fullName: varchar("full_name"),
   phone: varchar("phone"),
   birthDate: varchar("birth_date"),
+  city: varchar("city"),
+  state: varchar("state"),
+  bio: text("bio"),
+  emergencyContact: varchar("emergency_contact"),
+  emergencyPhone: varchar("emergency_phone"),
+  bloodType: varchar("blood_type"),
+  allergies: text("allergies"),
+  medicalConditions: text("medical_conditions"),
   profileImageUrl: varchar("profile_image_url"),
-  profileImageData: text("profile_image_data"), // Para armazenar imagem em base64
+  profileImageData: text("profile_image_data"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

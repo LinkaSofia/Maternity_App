@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,6 +8,7 @@ import { LogOut, Settings, User } from "lucide-react";
 
 export default function UserMenu() {
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   if (!user) return null;
@@ -47,7 +49,7 @@ export default function UserMenu() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56 bg-white border border-gray-200 shadow-lg" align="end" forceMount>
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             <p className="font-medium">{getUserDisplayName()}</p>
@@ -59,7 +61,13 @@ export default function UserMenu() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem 
+          className="cursor-pointer hover:bg-gray-100"
+          onClick={() => {
+            setLocation('/profile');
+            setIsOpen(false);
+          }}
+        >
           <User className="mr-2 h-4 w-4" />
           <span>Perfil</span>
         </DropdownMenuItem>

@@ -22,6 +22,7 @@ import BirthPlan from "@/pages/birth-plan";
 import Community from "@/pages/community";
 import Baby from "@/pages/baby";
 import Tips from "@/pages/tips";
+import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -96,6 +97,7 @@ function Router() {
               <Route path="/community" component={Community} />
               <Route path="/baby" component={Baby} />
               <Route path="/tips" component={Tips} />
+              <Route path="/profile" component={Profile} />
             </>
           )}
         </>
