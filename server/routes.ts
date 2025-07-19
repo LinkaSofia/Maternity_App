@@ -251,7 +251,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Kick counter routes
-  app.post('/api/kick-counter', isAuthenticated, async (req: any, res) => {
+  app.post('/api/kick-counters', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const sessionData = { ...req.body, userId };
@@ -263,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/kick-counter', isAuthenticated, async (req: any, res) => {
+  app.get('/api/kick-counters', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const sessions = await storage.getKickCounterSessions(userId);
@@ -271,6 +271,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching kick counter sessions:", error);
       res.status(500).json({ message: "Failed to fetch kick counter sessions" });
+    }
+  });
+
+  app.get('/api/kick-counters/today', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const sessions = await storage.getKickCounterSessions(userId);
+      const today = new Date().toISOString().split('T')[0];
+      const todaySessions = sessions.filter((session: any) => 
+        session.date === today
+      );
+      res.json(todaySessions[0] || null);
+    } catch (error) {
+      console.error("Error fetching today's kick counter:", error);
+      res.status(500).json({ message: "Failed to fetch today's kick counter" });
     }
   });
 

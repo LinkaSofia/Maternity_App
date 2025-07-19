@@ -28,19 +28,14 @@ export default function KickCounter() {
 
   const { data: todayCounter } = useQuery({
     queryKey: ['/api/kick-counters', 'today'],
-    queryFn: () => apiRequest(`/api/kick-counters/today`),
   });
 
   const { data: recentCounters = [] } = useQuery({
     queryKey: ['/api/kick-counters'],
-    queryFn: () => apiRequest('/api/kick-counters'),
   });
 
   const saveKickCounter = useMutation({
-    mutationFn: (data: any) => apiRequest('/api/kick-counters', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    mutationFn: (data: any) => apiRequest('POST', '/api/kick-counters', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/kick-counters'] });
       resetCounter();
