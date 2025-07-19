@@ -1,0 +1,46 @@
+name: maternidade_app
+description: "Aplicativo de acompanhamento da gestação e maternidade"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  # Gerenciamento de estado
+  provider: ^6.1.1
+  # Armazenamento local
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  shared_preferences: ^2.2.2
+  # Interface e navegação
+  google_fonts: ^6.1.0
+  # Notificações
+  flutter_local_notifications: ^16.3.2
+  permission_handler: ^11.2.0
+  timezone: ^0.9.4
+  # Formatação de datas
+  intl: ^0.19.0
+  # Icons adicionais
+  font_awesome_flutter: ^10.6.0
+  # Validação de formulários
+  validators: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # Assets para imagens (placeholders para futuras implementações)
+  # assets:
+  #   - assets/images/
+  #   - assets/fetus/
+  #   - assets/fruits/
+  #   - assets/icons/
