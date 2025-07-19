@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import Setup from "@/pages/setup";
+import Diary from "@/pages/diary";
+import Appointments from "@/pages/appointments";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -65,7 +67,11 @@ function Router() {
           ) : !pregnancy ? (
             <Route path="/" component={Setup} />
           ) : (
-            <Route path="/" component={Home} />
+            <>
+              <Route path="/" component={Home} />
+              <Route path="/diary" component={Diary} />
+              <Route path="/appointments" component={Appointments} />
+            </>
           )}
         </>
       )}

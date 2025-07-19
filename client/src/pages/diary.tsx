@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import type { DiaryEntry as DiaryEntryType } from "@shared/schema";
 
 const diaryEntrySchema = z.object({
+  date: z.string().min(1, "Data e hora são obrigatórias"),
   title: z.string().min(1, "Título é obrigatório"),
   content: z.string().min(10, "Conteúdo deve ter pelo menos 10 caracteres"),
   mood: z.string().optional(),
@@ -35,6 +36,7 @@ export default function Diary() {
   const form = useForm<DiaryEntryFormData>({
     resolver: zodResolver(diaryEntrySchema),
     defaultValues: {
+      date: new Date().toISOString().slice(0, 16), // YYYY-MM-DDTHH:MM
       title: "",
       content: "",
       mood: "",
@@ -55,6 +57,7 @@ export default function Diary() {
   const createEntryMutation = useMutation({
     mutationFn: async (entry: DiaryEntryFormData) => {
       await apiRequest("POST", "/api/diary", {
+        date: entry.date,
         title: entry.title,
         content: entry.content,
         mood: entry.mood,
@@ -85,6 +88,7 @@ export default function Diary() {
   const updateEntryMutation = useMutation({
     mutationFn: async ({ id, entry }: { id: number; entry: Partial<DiaryEntryFormData> }) => {
       await apiRequest("PUT", `/api/diary/${id}`, {
+        date: entry.date,
         title: entry.title,
         content: entry.content,
         mood: entry.mood,
@@ -143,6 +147,7 @@ export default function Diary() {
   const handleEdit = (entry: DiaryEntryType) => {
     setEditingEntry(entry);
     form.reset({
+      date: new Date(entry.date).toISOString().slice(0, 16),
       title: entry.title || "",
       content: entry.content,
       mood: entry.mood || "",
@@ -237,6 +242,26 @@ export default function Diary() {
 
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Data e Hora *
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="datetime-local"
+                            className="rounded-xl"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <FormField
                     control={form.control}
                     name="title"

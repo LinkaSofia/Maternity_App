@@ -9,11 +9,13 @@ import Header from "@/components/header";
 import Baby3DModel from "@/components/baby-3d-model";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star } from "lucide-react";
+import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star, BookOpen, Stethoscope, ArrowRight } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
   const { user } = useAuth();
+  const [location, navigate] = useLocation();
 
   const { data: pregnancy } = useQuery({
     queryKey: ["/api/pregnancies/active"],
@@ -158,6 +160,61 @@ export default function Home() {
                       })
                     : "Não agendada"}
                 </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Actions - Diário e Consultas */}
+          <div className="grid grid-cols-1 gap-4">
+            <Card 
+              className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl card-shadow border-0 cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              onClick={() => navigate("/diary")}
+            >
+              <CardContent className="p-6 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <BookOpen className="text-white" size={28} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold">Meu Diário</h3>
+                      <p className="text-sm opacity-90">
+                        Registre seus sentimentos e momentos especiais
+                      </p>
+                      <p className="text-xs opacity-70 mt-1">
+                        {recentEntries?.length || 0} entradas registradas
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="text-white/80" size={24} />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl card-shadow border-0 cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              onClick={() => navigate("/appointments")}
+            >
+              <CardContent className="p-6 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <Stethoscope className="text-white" size={28} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold">Consultas</h3>
+                      <p className="text-sm opacity-90">
+                        Gerencie seus compromissos médicos
+                      </p>
+                      <p className="text-xs opacity-70 mt-1">
+                        {upcomingAppointments?.[0]?.date
+                          ? `Próxima: ${new Date(upcomingAppointments[0].date).toLocaleDateString("pt-BR")}`
+                          : "Nenhuma consulta agendada"}
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="text-white/80" size={24} />
+                </div>
               </CardContent>
             </Card>
           </div>

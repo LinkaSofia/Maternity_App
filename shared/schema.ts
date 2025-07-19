@@ -54,29 +54,35 @@ export const pregnancies = pgTable("pregnancies", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Diary entries
+// Diary entries - Diário da gestante
 export const diaryEntries = pgTable("diary_entries", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   pregnancyId: integer("pregnancy_id").references(() => pregnancies.id),
+  date: timestamp("date").notNull(), // Data/hora específica escolhida pela usuária
   title: varchar("title"),
-  content: text("content").notNull(),
-  mood: varchar("mood"),
+  content: text("content").notNull(), // Relato importante
+  mood: varchar("mood"), // Humor do dia
   tags: text("tags").array(),
   imageUrl: varchar("image_url"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Medical appointments
+// Medical appointments - Consultas médicas
 export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull().references(() => users.id),
   pregnancyId: integer("pregnancy_id").references(() => pregnancies.id),
-  date: timestamp("date").notNull(),
-  type: varchar("type").notNull(),
-  notes: text("notes"),
+  date: timestamp("date").notNull(), // Data/hora da consulta
+  time: varchar("time").notNull(), // Horário específico (formato HH:mm)
+  type: varchar("type").notNull(), // Tipo: pré-natal, ultrassom, exames, etc
+  doctor: varchar("doctor"), // Nome do médico
+  location: varchar("location"), // Local da consulta
+  notes: text("notes"), // Observações
+  isCompleted: boolean("is_completed").default(false), // Se já foi realizada
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Weight tracking
@@ -172,6 +178,8 @@ export const insertDiaryEntrySchema = createInsertSchema(diaryEntries).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  date: z.string().or(z.date()), // Permite string ou Date
 });
 export type InsertDiaryEntry = z.infer<typeof insertDiaryEntrySchema>;
 export type DiaryEntry = typeof diaryEntries.$inferSelect;
@@ -179,6 +187,9 @@ export type DiaryEntry = typeof diaryEntries.$inferSelect;
 export const insertAppointmentSchema = createInsertSchema(appointments).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
+}).extend({
+  date: z.string().or(z.date()), // Permite string ou Date
 });
 export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
 export type Appointment = typeof appointments.$inferSelect;

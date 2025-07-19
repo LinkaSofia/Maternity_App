@@ -41,6 +41,9 @@ export interface IStorage {
   // Appointment operations
   createAppointment(appointment: InsertAppointment): Promise<Appointment>;
   getUpcomingAppointments(userId: string): Promise<Appointment[]>;
+  getAllAppointments(userId: string): Promise<Appointment[]>;
+  updateAppointment(id: number, appointment: Partial<InsertAppointment>): Promise<Appointment>;
+  deleteAppointment(id: number): Promise<void>;
   
   // Weight tracking
   createWeightEntry(entry: InsertWeightEntry): Promise<WeightEntry>;
@@ -113,7 +116,10 @@ export class DatabaseStorage implements IStorage {
   async createDiaryEntry(entry: InsertDiaryEntry): Promise<DiaryEntry> {
     const [newEntry] = await db
       .insert(diaryEntries)
-      .values(entry)
+      .values({
+        ...entry,
+        date: typeof entry.date === 'string' ? new Date(entry.date) : entry.date,
+      })
       .returning();
     return newEntry;
   }
@@ -144,9 +150,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateDiaryEntry(id: number, entry: Partial<InsertDiaryEntry>): Promise<DiaryEntry> {
+    const updateData: any = { ...entry, updatedAt: new Date() };
+    if (entry.date) {
+      updateData.date = typeof entry.date === 'string' ? new Date(entry.date) : entry.date;
+    }
     const [updated] = await db
       .update(diaryEntries)
-      .set({ ...entry, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(diaryEntries.id, id))
       .returning();
     return updated;
@@ -160,17 +170,46 @@ export class DatabaseStorage implements IStorage {
   async createAppointment(appointment: InsertAppointment): Promise<Appointment> {
     const [newAppointment] = await db
       .insert(appointments)
-      .values(appointment)
+      .values({
+        ...appointment,
+        date: typeof appointment.date === 'string' ? new Date(appointment.date) : appointment.date,
+      })
       .returning();
     return newAppointment;
   }
 
   async getUpcomingAppointments(userId: string): Promise<Appointment[]> {
+    const now = new Date();
     return await db
       .select()
       .from(appointments)
-      .where(and(eq(appointments.userId, userId), eq(appointments.date, new Date())))
+      .where(and(eq(appointments.userId, userId), eq(appointments.isCompleted, false)))
       .orderBy(appointments.date);
+  }
+
+  async getAllAppointments(userId: string): Promise<Appointment[]> {
+    return await db
+      .select()
+      .from(appointments)
+      .where(eq(appointments.userId, userId))
+      .orderBy(desc(appointments.date));
+  }
+
+  async updateAppointment(id: number, appointment: Partial<InsertAppointment>): Promise<Appointment> {
+    const updateData: any = { ...appointment, updatedAt: new Date() };
+    if (appointment.date) {
+      updateData.date = typeof appointment.date === 'string' ? new Date(appointment.date) : appointment.date;
+    }
+    const [updated] = await db
+      .update(appointments)
+      .set(updateData)
+      .where(eq(appointments.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteAppointment(id: number): Promise<void> {
+    await db.delete(appointments).where(eq(appointments.id, id));
   }
 
   // Weight tracking
