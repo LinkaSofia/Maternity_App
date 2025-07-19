@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Calendar, Clock, MapPin, User, Stethoscope, Edit3, Trash2, Check, X } from "lucide-react";
+import { Plus, Calendar, Clock, MapPin, User, Stethoscope, Edit3, Trash2, Check, X, ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -30,6 +31,7 @@ export default function Appointments() {
   const [editingAppointment, setEditingAppointment] = useState<AppointmentType | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [location, navigate] = useLocation();
 
   const form = useForm<AppointmentFormData>({
     resolver: zodResolver(appointmentSchema),
@@ -209,14 +211,22 @@ export default function Appointments() {
         <div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-full animate-pulse delay-1000"></div>
         <div className="relative z-10">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center">
-                <Calendar className="mr-2" size={24} />
-                Consultas
-              </h1>
-              <p className="text-sm opacity-90 mt-2">
-                Gerencie seus compromissos médicos
-              </p>
+            <div className="flex items-center">
+              <button
+                onClick={() => navigate("/")}
+                className="mr-3 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200"
+              >
+                <ArrowLeft size={20} className="text-white" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold flex items-center">
+                  <Calendar className="mr-2" size={24} />
+                  Consultas
+                </h1>
+                <p className="text-sm opacity-90 mt-2">
+                  Gerencie seus compromissos médicos
+                </p>
+              </div>
             </div>
             <div className="text-right">
               <div className="text-2xl">🩺</div>
