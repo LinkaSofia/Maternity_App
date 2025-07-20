@@ -16,7 +16,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 const setupSchema = z.object({
   // Dados pessoais
   fullName: z.string().min(2, "Nome completo deve ter pelo menos 2 caracteres"),
-  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
+  email: z.string().email("Email deve ter um formato válido"),
+  phone: z.string().optional(),
   birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
   profileImageData: z.string().optional(),
   
@@ -51,7 +52,8 @@ export default function Setup() {
   const form = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
-      fullName: "",
+      fullName: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : "",
+      email: user?.email || "",
       phone: "",
       birthDate: "",
       profileImageData: "",
@@ -77,6 +79,7 @@ export default function Setup() {
       // Primeiro atualiza os dados do usuário
       await updateUserMutation.mutateAsync({
         fullName: data.fullName,
+        email: data.email,
         phone: data.phone,
         birthDate: data.birthDate,
         profileImageData: data.profileImageData,
@@ -194,20 +197,20 @@ export default function Setup() {
             </div>
             
             {/* Progress Steps */}
-            <div className="flex items-center justify-between mb-4">
-              <div className={`flex items-center space-x-2 ${currentStep >= 1 ? 'text-pink-600' : 'text-gray-400'}`}>
+            <div className="flex items-center justify-between mb-4 px-2">
+              <div className={`flex items-center space-x-3 ${currentStep >= 1 ? 'text-pink-600' : 'text-gray-400'}`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 1 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
                   1
                 </div>
                 <span className="text-sm font-medium">Perfil</span>
               </div>
-              <div className={`flex items-center space-x-2 ${currentStep >= 2 ? 'text-pink-600' : 'text-gray-400'}`}>
+              <div className={`flex items-center space-x-3 ${currentStep >= 2 ? 'text-pink-600' : 'text-gray-400'}`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 2 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
                   2
                 </div>
                 <span className="text-sm font-medium">Gravidez</span>
               </div>
-              <div className={`flex items-center space-x-2 ${currentStep >= 3 ? 'text-pink-600' : 'text-gray-400'}`}>
+              <div className={`flex items-center space-x-3 ${currentStep >= 3 ? 'text-pink-600' : 'text-gray-400'}`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${currentStep >= 3 ? 'bg-gradient-to-r from-pink-400 to-pink-500 text-white' : 'bg-gray-200'}`}>
                   3
                 </div>
@@ -279,11 +282,32 @@ export default function Setup() {
 
                     <FormField
                       control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Email *
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="rounded-xl"
+                              type="email"
+                              placeholder="seu@email.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Telefone *
+                            Telefone
                           </FormLabel>
                           <FormControl>
                             <Input

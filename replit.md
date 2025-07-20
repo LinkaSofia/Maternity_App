@@ -299,6 +299,15 @@ A conexão está configurada para funcionar automaticamente com Neon Database, q
 - Imagem adicionada na página de login
 - Logo no header principal de todas as páginas
 - Ícone do app atualizado para PWA
+- Logo agora aparece redonda usando object-cover
+- Removida do desenvolvimento semanal mantendo ícone original
+
+✓ **Formulário de cadastro otimizado**
+- Campo de email adicionado com preenchimento automático
+- Nome e sobrenome consolidados em "Nome Completo"
+- Telefone tornou-se campo opcional
+- Melhor espaçamento entre steps de progresso
+- Preenchimento automático dos dados do usuário logado
 
 ### 2025-07-19 - Sistema Completo de Diário e Consultas Implementado
 ✓ **Diário da gestante com campos personalizados**
