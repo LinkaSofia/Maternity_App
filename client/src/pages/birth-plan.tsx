@@ -282,7 +282,7 @@ export default function BirthPlan() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Baby className="w-5 h-5" />
+                  <img src="/logo.png" alt="Baby" className="w-5 h-5 rounded-full" />
                   Preferências para o Nascimento
                 </CardTitle>
               </CardHeader>

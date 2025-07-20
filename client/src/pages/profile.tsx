@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowLeft, Save, User, Phone, Calendar, MapPin, Heart, Baby } from 'lucide-react';
+import { ArrowLeft, Save, User, Phone, Calendar, MapPin, Heart } from 'lucide-react';
+import LogoIcon from '@/components/LogoIcon';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 

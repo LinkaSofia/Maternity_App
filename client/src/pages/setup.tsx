@@ -187,7 +187,7 @@ export default function Setup() {
             {/* Header */}
             <div className="text-center mb-6">
               <div className="w-20 h-20 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-xl mb-4">
-                <Baby className="text-pink-600" size={28} />
+                <img src="/logo.png" alt="BabyJourney Logo" className="w-7 h-7 rounded-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
               </div>
               
@@ -382,7 +382,7 @@ export default function Setup() {
                   <div className="space-y-4">
                     <div className="text-center mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <Baby className="text-white" size={24} />
+                        <img src="/logo.png" alt="Baby" className="w-6 h-6 rounded-full" />
                       </div>
                       <h2 className="text-xl font-bold text-gray-800 mb-2">Dados da Gravidez</h2>
                       <p className="text-gray-600">Vamos calcular sua semana gestacional</p>

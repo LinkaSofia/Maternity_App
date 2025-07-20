@@ -66,7 +66,7 @@ export default function Landing() {
             <CardContent className="p-5">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Baby className="text-white" size={20} />
+                  <img src="/logo.png" alt="Baby" className="w-5 h-5 rounded-full" />
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-800 text-lg">Desenvolvimento Semanal</h3>
