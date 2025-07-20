@@ -114,9 +114,9 @@ export default function Fetal3DModel({ week, size = "medium", animated = true }:
   };
 
   const sizeClasses = {
-    small: "w-20 h-24",
-    medium: "w-28 h-32",
-    large: "w-36 h-40"
+    small: "w-24 h-28",
+    medium: "w-32 h-36",
+    large: "w-40 h-48"
   };
 
   const { scale, opacity } = getFetalSize();
@@ -138,7 +138,11 @@ export default function Fetal3DModel({ week, size = "medium", animated = true }:
           className={`relative w-full h-full bg-gradient-to-br ${colorClass} rounded-full flex flex-col items-center justify-center shadow-2xl border-2 border-white/40 transition-all duration-1000 ${
             isMoving ? 'animate-bounce' : ''
           } ${kickAnimation ? 'animate-pulse' : ''}`}
-          style={position}
+          style={{
+            ...position,
+            background: `linear-gradient(135deg, rgba(251, 207, 232, 0.8), rgba(219, 234, 254, 0.8), rgba(196, 181, 253, 0.8))`,
+            backdropFilter: 'blur(10px)'
+          }}
         >
           
           {/* Heartbeat effect */}
