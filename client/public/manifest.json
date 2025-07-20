@@ -3,12 +3,15 @@
   "short_name": "BabyJourney",
   "description": "Aplicativo completo para acompanhar sua gravidez com diário, consultas e progresso semanal",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#ffffff",
   "theme_color": "#ec4899",
   "orientation": "portrait-primary",
   "categories": ["health", "lifestyle", "medical"],
   "lang": "pt-BR",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icon.svg",
