@@ -50,10 +50,16 @@ export default function Home() {
         <div className="absolute top-4 right-4 w-16 h-16 bg-white/10 rounded-full animate-pulse"></div>
         <div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-full animate-pulse delay-1000"></div>
         <div className="relative z-10">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-4">
+            <img 
+              src="/logo.png" 
+              alt="BabyJourney Logo" 
+              className="w-12 h-12 rounded-full bg-white/10 p-1"
+            />
             <Header 
               title={`Olá, ${user?.firstName || "Mamãe"}!`}
               subtitle={`Semana ${currentWeek} de gestação`}
+              showUserMenu={true}
             />
           </div>
 

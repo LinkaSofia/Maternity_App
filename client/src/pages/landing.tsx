@@ -27,7 +27,11 @@ export default function Landing() {
         <div className="text-center mb-8 fade-in">
           <div className="relative mb-6">
             <div className="w-48 h-48 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-2xl">
-              <Baby className="text-pink-600" size={64} />
+              <img 
+                src="/logo.png" 
+                alt="BabyJourney Logo - Mãe com bebê" 
+                className="w-40 h-40 object-contain"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
             </div>
             

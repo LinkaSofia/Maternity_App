@@ -11,7 +11,7 @@ export default function Header({ title, subtitle, showUserMenu = true }: HeaderP
   const { user } = useAuth();
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center flex-1">
       <div>
         <h1 className="text-xl font-bold">{title}</h1>
         {subtitle && (

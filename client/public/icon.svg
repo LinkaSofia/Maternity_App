@@ -1,13 +1,47 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="256" cy="256" r="256" fill="#ec4899"/>
+  <!-- Background circle with pink gradient -->
+  <circle cx="256" cy="256" r="256" fill="#f9a8d4"/>
   
-  <!-- Baby silhouette -->
-  <path d="M256 128C296 128 328 160 328 200C328 240 296 272 256 272C216 272 184 240 184 200C184 160 216 128 256 128Z" fill="white"/>
-  
-  <!-- Heart -->
-  <path d="M256 320C240 304 208 272 208 240C208 224 216 208 232 208C240 208 248 212 256 220C264 212 272 208 280 208C296 208 304 224 304 240C304 272 272 304 256 320Z" fill="#ffb3d9"/>
-  
-  <!-- Text "Baby" -->
-  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">Baby</text>
+  <!-- Mother figure -->
+  <g transform="translate(256,256) scale(2.2)">
+    <!-- Mother's hair -->
+    <path d="M-40 -60 Q-35 -80 -20 -85 Q0 -90 20 -85 Q35 -80 40 -60 Q35 -50 25 -45 Q15 -40 5 -38 Q-5 -38 -15 -40 Q-25 -45 -35 -50 Z" fill="#d4a574" stroke="#6b4423" stroke-width="3"/>
+    
+    <!-- Mother's face -->
+    <ellipse cx="0" cy="-45" rx="32" ry="30" fill="#f4d1ae" stroke="#6b4423" stroke-width="3"/>
+    
+    <!-- Mother's eyes -->
+    <path d="M-12 -52 Q-8 -55 -8 -50" stroke="#6b4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M12 -52 Q8 -55 8 -50" stroke="#6b4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <!-- Mother's smile -->
+    <path d="M-8 -35 Q0 -30 8 -35" stroke="#6b4423" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <!-- Mother's body -->
+    <ellipse cx="0" cy="0" rx="45" ry="55" fill="#f9a8d4" stroke="#6b4423" stroke-width="3"/>
+    
+    <!-- Mother's arms -->
+    <ellipse cx="-35" cy="-5" rx="15" ry="35" fill="#f4d1ae" stroke="#6b4423" stroke-width="3" transform="rotate(-20)"/>
+    <ellipse cx="35" cy="-5" rx="15" ry="35" fill="#f4d1ae" stroke="#6b4423" stroke-width="3" transform="rotate(20)"/>
+    
+    <!-- Baby -->
+    <g transform="translate(15,-10)">
+      <!-- Baby's head -->
+      <circle cx="0" cy="-15" r="18" fill="#f4d1ae" stroke="#6b4423" stroke-width="2"/>
+      
+      <!-- Baby's eyes -->
+      <circle cx="-6" cy="-18" r="1" fill="#6b4423"/>
+      <circle cx="6" cy="-18" r="1" fill="#6b4423"/>
+      
+      <!-- Baby's smile -->
+      <path d="M-4 -10 Q0 -7 4 -10" stroke="#6b4423" stroke-width="1" fill="none" stroke-linecap="round"/>
+      
+      <!-- Baby's body -->
+      <ellipse cx="0" cy="8" rx="12" ry="18" fill="#a7f3d0" stroke="#6b4423" stroke-width="2"/>
+      
+      <!-- Baby's arms -->
+      <circle cx="-8" cy="0" r="4" fill="#f4d1ae" stroke="#6b4423" stroke-width="1"/>
+      <circle cx="8" cy="0" r="4" fill="#f4d1ae" stroke="#6b4423" stroke-width="1"/>
+    </g>
+  </g>
 </svg>

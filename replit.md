@@ -294,6 +294,12 @@ A conexão está configurada para funcionar automaticamente com Neon Database, q
 - Servidor Express rodando na porta 5000
 - App totalmente funcional no ambiente Replit
 
+✓ **Logo personalizada adicionada**
+- Nova logo da mãe com bebê implementada
+- Imagem adicionada na página de login
+- Logo no header principal de todas as páginas
+- Ícone do app atualizado para PWA
+
 ### 2025-07-19 - Sistema Completo de Diário e Consultas Implementado
 ✓ **Diário da gestante com campos personalizados**
 - Campo de data/hora personalizada (não mais automático)
