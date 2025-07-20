@@ -273,6 +273,26 @@ A conexão está configurada para funcionar automaticamente com Neon Database, q
 
 ## Recent Changes: Latest modifications with dates
 
+### 2025-07-20 - PWA (Progressive Web App) Configurado
+✓ **Aplicativo instalável no celular**
+- Manifest.json configurado com ícones e metadados
+- Service Worker registrado para funcionamento offline
+- Componente InstallPWA que aparece automaticamente
+- Usuário pode instalar o app na tela inicial
+- App funciona como aplicativo nativo, não no navegador
+
+✓ **Configurações mobile otimizadas**
+- Meta tags para iOS e Android
+- Prevenção de zoom em campos de input
+- Orientação portrait otimizada
+- Tema rosa/roxo (#ec4899) consistente
+
+✓ **Migração Replit Agent → Replit concluída**
+- PostgreSQL database configurado e funcionando
+- Todas as dependências instaladas corretamente
+- Servidor Express rodando na porta 5000
+- App totalmente funcional no ambiente Replit
+
 ### 2025-07-19 - Sistema Completo de Diário e Consultas Implementado
 ✓ **Diário da gestante com campos personalizados**
 - Campo de data/hora personalizada (não mais automático)

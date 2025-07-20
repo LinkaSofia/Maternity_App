@@ -24,6 +24,7 @@ import Baby from "@/pages/baby";
 import Tips from "@/pages/tips";
 import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
+import InstallPWA from "@/components/InstallPWA";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -113,6 +114,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <InstallPWA />
       </TooltipProvider>
     </QueryClientProvider>
   );

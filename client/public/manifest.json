@@ -1,0 +1,26 @@
+{
+  "name": "BabyJourney - Diário da Gestação",
+  "short_name": "BabyJourney",
+  "description": "Aplicativo completo para acompanhar sua gravidez com diário, consultas e progresso semanal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec4899",
+  "orientation": "portrait-primary",
+  "categories": ["health", "lifestyle", "medical"],
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon.svg", 
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}

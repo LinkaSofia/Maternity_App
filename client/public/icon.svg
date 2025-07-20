@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#ec4899"/>
+  
+  <!-- Baby silhouette -->
+  <path d="M256 128C296 128 328 160 328 200C328 240 296 272 256 272C216 272 184 240 184 200C184 160 216 128 256 128Z" fill="white"/>
+  
+  <!-- Heart -->
+  <path d="M256 320C240 304 208 272 208 240C208 224 216 208 232 208C240 208 248 212 256 220C264 212 272 208 280 208C296 208 304 224 304 240C304 272 272 304 256 320Z" fill="#ffb3d9"/>
+  
+  <!-- Text "Baby" -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">Baby</text>
+</svg>
