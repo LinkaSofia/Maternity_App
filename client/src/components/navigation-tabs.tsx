@@ -1,5 +1,4 @@
-import { Home, BookOpen, Lightbulb } from "lucide-react";
-import LogoIcon from "./LogoIcon";
+import { Home, Baby, BookOpen, Lightbulb } from "lucide-react";
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -9,7 +8,7 @@ interface NavigationTabsProps {
 export default function NavigationTabs({ activeTab, onTabChange }: NavigationTabsProps) {
   const tabs = [
     { id: "home", label: "Início", icon: Home },
-    { id: "baby", label: "Bebê", icon: LogoIcon },
+    { id: "baby", label: "Bebê", icon: Baby },
     { id: "diary", label: "Diário", icon: BookOpen },
     { id: "tips", label: "Dicas", icon: Lightbulb },
   ];

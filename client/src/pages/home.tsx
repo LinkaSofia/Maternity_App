@@ -7,6 +7,7 @@ import BabySizeComparison from "@/components/baby-size-comparison";
 import FloatingActionButton from "@/components/floating-action-button";
 import Header from "@/components/header";
 import Baby3DModel from "@/components/baby-3d-model";
+import Fetal3DModel from "@/components/fetal-3d-model";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Weight, Clock, TrendingUp, Heart, Baby, Sparkles, Star, BookOpen, Stethoscope, ArrowRight, Activity, ShoppingCart, Camera, Dumbbell, ChefHat, Pill, FileText, Users } from "lucide-react";
@@ -97,7 +98,7 @@ export default function Home() {
               <div className="flex justify-center mb-6">
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-pink-200 to-purple-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                  <Baby3DModel week={currentWeek} size="large" />
+                  <Fetal3DModel week={currentWeek} size="large" animated={true} />
                 </div>
               </div>
               
