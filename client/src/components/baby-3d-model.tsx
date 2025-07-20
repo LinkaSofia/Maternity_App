@@ -197,7 +197,7 @@ export default function Baby3DModel({ week, size = "medium" }: Baby3DModelProps)
         <div className="mt-3">
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 border border-green-200">
             <div className="flex items-center justify-center space-x-1">
-              <img src="/logo.png" alt="Baby" className="w-4 h-4 rounded-full" />
+              <Baby className="text-green-600" size={14} />
               <span className="text-xs text-green-700 font-medium">
                 {week <= 12 ? "Primeiro trimestre" : 
                  week <= 28 ? "Segundo trimestre" : "Terceiro trimestre"}

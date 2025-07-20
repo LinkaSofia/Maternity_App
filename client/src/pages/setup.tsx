@@ -15,8 +15,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 
 const setupSchema = z.object({
   // Dados pessoais
-  firstName: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  lastName: z.string().min(2, "Sobrenome deve ter pelo menos 2 caracteres"),
   fullName: z.string().min(2, "Nome completo deve ter pelo menos 2 caracteres"),
   phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
   birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
@@ -53,8 +51,6 @@ export default function Setup() {
   const form = useForm<SetupFormData>({
     resolver: zodResolver(setupSchema),
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
       fullName: "",
       phone: "",
       birthDate: "",
@@ -80,8 +76,6 @@ export default function Setup() {
     mutationFn: async (data: SetupFormData) => {
       // Primeiro atualiza os dados do usuário
       await updateUserMutation.mutateAsync({
-        firstName: data.firstName,
-        lastName: data.lastName,
         fullName: data.fullName,
         phone: data.phone,
         birthDate: data.birthDate,
@@ -186,8 +180,8 @@ export default function Setup() {
           <CardContent className="p-6">
             {/* Header */}
             <div className="text-center mb-6">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-xl mb-4">
-                <img src="/logo.png" alt="BabyJourney Logo" className="w-7 h-7 rounded-full" />
+              <div className="w-28 h-28 mx-auto bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center relative overflow-hidden shadow-xl mb-6">
+                <img src="/logo.png" alt="BabyJourney Logo" className="w-24 h-24 object-cover rounded-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
               </div>
               
@@ -265,46 +259,6 @@ export default function Setup() {
                     {/* Form Fields */}
                     <FormField
                       control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700">
-                            Nome *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              className="rounded-xl"
-                              placeholder="Seu nome"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700">
-                            Sobrenome *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              className="rounded-xl"
-                              placeholder="Seu sobrenome"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
                       name="fullName"
                       render={({ field }) => (
                         <FormItem>
@@ -314,7 +268,7 @@ export default function Setup() {
                           <FormControl>
                             <Input
                               className="rounded-xl"
-                              placeholder="Nome completo"
+                              placeholder="Seu nome completo"
                               {...field}
                             />
                           </FormControl>
@@ -382,7 +336,7 @@ export default function Setup() {
                   <div className="space-y-4">
                     <div className="text-center mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <img src="/logo.png" alt="Baby" className="w-6 h-6 rounded-full" />
+                        <User className="text-white" size={24} />
                       </div>
                       <h2 className="text-xl font-bold text-gray-800 mb-2">Dados da Gravidez</h2>
                       <p className="text-gray-600">Vamos calcular sua semana gestacional</p>

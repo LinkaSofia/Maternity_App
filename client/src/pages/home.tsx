@@ -54,7 +54,7 @@ export default function Home() {
             <img 
               src="/logo.png" 
               alt="BabyJourney Logo" 
-              className="w-12 h-12 rounded-full bg-white/10 p-1"
+              className="w-12 h-12 object-cover rounded-full bg-white/10 p-1"
             />
             <Header 
               title={`Olá, ${user?.firstName || "Mamãe"}!`}

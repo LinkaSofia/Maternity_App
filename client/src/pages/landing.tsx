@@ -30,7 +30,7 @@ export default function Landing() {
               <img 
                 src="/logo.png" 
                 alt="BabyJourney Logo - Mãe com bebê" 
-                className="w-40 h-40 object-contain"
+                className="w-40 h-40 object-cover rounded-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 to-transparent rounded-full"></div>
             </div>
@@ -66,7 +66,7 @@ export default function Landing() {
             <CardContent className="p-5">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <img src="/logo.png" alt="Baby" className="w-5 h-5 rounded-full" />
+                  <Heart className="text-white" size={20} />
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-800 text-lg">Desenvolvimento Semanal</h3>
